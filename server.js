@@ -1,7 +1,7 @@
 const express = require('express')
 const {createServer} = require('http')
 const { Server } = require('socket.io')
-const port = process.env.REACT_APP_PORT || 3002
+const port = process.env.PORT || 3002
 const app = express()
 
 const server = createServer(app)
@@ -11,6 +11,9 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 })
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('../twits/build'))
+}
 let socketConnection
 
 io.on("connection", socket => {

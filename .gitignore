@@ -1,2 +1,3 @@
 twits/node_modules
-server/node_modules
+twits/build
+node_modules
