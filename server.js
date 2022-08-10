@@ -11,9 +11,9 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 })
-// if (process.env.NODE_ENV === 'production') {
-//     app.use(express.static('../twits/build'))
-// }
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('../twits/build'))
+}
 let socketConnection
 
 io.on("connection", socket => {
