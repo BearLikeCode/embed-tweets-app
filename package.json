@@ -5,9 +5,10 @@
   "main": "server.js",
   "scripts": {
     "build": "cd twits && npm run build",
-    "client": "cd twits && npm start",
     "install-client": "cd twits && npm install",
-    "start": "node server.js"
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "start": "node server.js",
+    "client": "cd twits && npm start"
   },
   "author": "",
   "license": "ISC",
