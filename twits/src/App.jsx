@@ -7,7 +7,7 @@ function App() {
   const [tweets, setTweets] = useState([])
 
   useEffect(() => {
-    const socket = io.connect('/tweets')
+    const socket = io.connect('http://localhost:5000/')
     socket.on('connect', () => {
       console.log('socket connect')
       socket.on('tweets', data => {
