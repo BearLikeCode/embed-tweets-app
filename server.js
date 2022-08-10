@@ -5,6 +5,7 @@ const port = process.env.PORT || 3002
 const app = express()
 
 const server = createServer(app)
+const routes = require('./routes/tweets');
 const io = new Server(server, {
     cors: {
         origin: "*",
