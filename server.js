@@ -25,5 +25,5 @@ io.on("connection", socket => {
 io.on("disconnect", () => server.close())
 
 server.listen(port, () => {
-    console.log(`server is up on ${PORT}`)
+    console.log(`server is up on ${port}`)
 })
