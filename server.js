@@ -24,6 +24,8 @@ io.on("connection", socket => {
 })
 io.on("disconnect", () => server.close())
 
+app.use('/tweets', routes);
+
 server.listen(port, () => {
     console.log(`server is up on ${port}`)
 })
