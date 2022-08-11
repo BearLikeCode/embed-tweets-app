@@ -6,7 +6,7 @@
   "scripts": {
     "build": "cd twits && npm run build",
     "install-client": "cd twits && npm install",
-    "heroku-postbuild": "npm run install-client && npm run build",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix twits && npm run build --prefix twits",
     "start": "node server.js",
     "client": "cd twits && npm start"
   },
