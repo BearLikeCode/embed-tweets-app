@@ -9,7 +9,7 @@ function App() {
   useEffect(() => {
     const socket = io.connect('/')
     socket.on('connect', () => {
-      console.log('socket connect')
+      console.log('socket connected')
       socket.on('tweets', data => {
         setTweets((prev) => [data].concat(prev.slice(0, 20)))
         console.log(data)
