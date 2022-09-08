@@ -39,7 +39,7 @@ function App() {
     // })
     hashtag !== null &&
     axios
-    .get('http://localhost:3002/api/recent', {
+    .get('/api/recent', {
       params: {hashtag}
     })
     .then((res) => setTweets(res.data._realData))
