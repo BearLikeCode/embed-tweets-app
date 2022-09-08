@@ -19,7 +19,6 @@ const Tweet = ({
   const createdAt = new Date(created_at);
 
   const formattedText = text?.replace(/https:\/\/[\n\S]+/g, '');
-  const quoteTweet =
     referenced_tweets && referenced_tweets.find((t) => t.type === 'quoted');
 
   return (
@@ -94,8 +93,8 @@ const Tweet = ({
               key={m.media_key}
               alt={text}
               height='auto'
-              width={500}
               src={m.url}
+              width="100%"
             />
           ))}
         </div>

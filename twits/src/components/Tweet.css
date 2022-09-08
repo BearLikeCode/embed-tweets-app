@@ -1,7 +1,7 @@
 .TweetContainer {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     border-radius: 0.25rem;
-    border: 1px solid gray;
+    /* border: 1px solid gray; */
     /* border-width: 1px;
     border-color: rgb(209 213 219 / 1); */
     padding-left: 1.5rem;
@@ -10,7 +10,7 @@
     padding-bottom: 1rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    width: 100%;
+    background: #FFF;
 }
 
 .TweetTitles {

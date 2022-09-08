@@ -5,6 +5,12 @@ const port = process.env.PORT || 3002
 const app = express()
 
 const server = createServer(app)
+app.all('/*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+  });
+app.use('/api', require('./routes/api.route'))
 const io = new Server(server, {
     cors: {
         origin: "*",

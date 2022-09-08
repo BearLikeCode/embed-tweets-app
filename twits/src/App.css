@@ -1,61 +1,78 @@
 
-.App {
-  text-align: center;
-}
-
 .flex {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 30px;
+  height: 100vh;
+}
+
+.hashtagGroup {
+  width: 100%;
+  max-width: 530px;
+  height: 60px;
+  position: relative;
+}
+.hashtagGroup button {
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  right: 8px;
+  border-radius: 8px;
+  border: none;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  background: #3258FB;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.hashtagGroup button:hover {
+  opacity: 0.6;
+}
+.hashtagGroup button:disabled,
+.hashtagGroup button:disabled:hover {
+  background: rgb(191, 205, 255);
+  opacity: 1;
+}
+.hashtagInput {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  box-sizing: border-box;
+  padding: 0 50px 0 25px;
+  border-radius: 8px;
+  border: none;
 }
 
 .fixedWidth {
-  /* padding: 65px 15px 70px 15px; */
   transition: all 0.5s;
-  width: 530px;
-  /* height: 900px; */
-  /* position: relative; */
-  /* background-image: url(frame.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain; */
+  max-width: 530px;
+  height: 80%;
+  /* background: #FFF; */
+  border-radius: 8px;
+  padding: 10px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.tagLabel {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 28px;
+  background: #FFF;
 }
 
-.App-link {
-  color: #61dafb;
+.tagLabel span {
+  color: #3258FB;
+  font-weight: 600;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.tagLabel img {
+  cursor: pointer;
+  transition: all 0.3s;
 }
+.tagLabel img:hover {
+  transform: scale(110%) rotate(180deg); 
 
-.twitter-tweet.twitter-tweet-rendered {
-  max-width: 400px !important;
 }
