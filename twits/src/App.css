@@ -4,7 +4,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 30px;
+  gap: 15px;
   height: 100vh;
 }
 
@@ -49,7 +49,7 @@
 .fixedWidth {
   transition: all 0.5s;
   max-width: 530px;
-  height: 80%;
+  height: 70%;
   /* background: #FFF; */
   border-radius: 8px;
   padding: 10px;
