@@ -63,7 +63,6 @@ function App() {
       { hashtag !== null &&
       <TagLabel setHashTag={setHashTag} tag={hashtag}/>
       }
-
       <div className='fixedWidth'>
       {tweets.data && tweets.data.map((tweet) => (
       <Tweet
