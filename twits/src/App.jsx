@@ -20,7 +20,7 @@ function App() {
 
   const submitSearch = (e) => {
     e.preventDefault()
-    setHashTag(searchString)
+    setHashTag(searchString.replace('#',''))
     setSearchString('')
   }
 
