@@ -2,8 +2,10 @@ import React from 'react'
 import CloseIcon from '../assets/close.svg'
 
 const TagLabel = (props) => {
-    const deleteHandler = () => {
-        props.setHashTag(null)
+    const deleteHandler = (e) => {
+        e.stopPropagation()
+        props.setSearchParams(prev => (prev.get('filters').split(' ').filter(item => !item.includes(props.tag)).length > 0 ? {filters: prev.get('filters').split(' ').filter(item => !item.includes(props.tag)).join(' ')} : {}))
+        props.setQuery(prev => prev.filter(item => !item.includes(props.tag)))
     }
   return (
     <div className='tagLabel'>

@@ -1,4 +1,6 @@
+import React from 'react';
 import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
@@ -8,11 +10,22 @@ import './App.css'
 
 import search from './assets/searchWhite.svg'
 import TagLabel from './components/TagLabel';
+import ButtonLoader from './components/ButtonLoader';
+
+import Loader from './assets/circlesLoader.gif'
 
 function App() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialQuery = searchParams.get('filters')
   const [tweets, setTweets] = useState({})
   const [searchString, setSearchString] = useState('')
-  const [hashtag, setHashTag] = useState(null)
+  const [query, setQuery] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  console.log(initialQuery)
+
+  useEffect(() => {
+    query.length === 0 && setTweets({})
+  }, [query])
 
   const handleChange = (e) => {
     setSearchString(e.target.value)
@@ -20,7 +33,7 @@ function App() {
 
   const submitSearch = (e) => {
     e.preventDefault()
-    setHashTag(searchString.replace('#',''))
+    setQuery((prev => prev.concat(searchString)))
     setSearchString('')
   }
 
@@ -37,46 +50,69 @@ function App() {
     //   socket.removeAllListeners('tweets')
     //   console.log('socket disconnected')
     // })
-    hashtag !== null &&
-    axios
-    .get('/api/recent', {
-      params: {hashtag}
-    })
-    .then((res) => setTweets(res.data._realData))
-  }, [hashtag])
+    if (query.length !== 0) {
+      const filters = `${query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' ')}${query.filter(item => item.includes('@')).length > 0 ? (' ' + query.filter(item => item.includes('@')).join(' ')) : ''}`
+      setIsLoading(true)
+      axios
+        .get('http://localhost:3002/api/recent', {
+          params: { filters }
+        })
+        .then((res) => {
+          setIsLoading(false)
+          setTweets(res.data._realData)
+        })
+        .catch((e) => {
+          setIsLoading(false)
+        })
+      setSearchParams({ filters })
+    } else if (query.length === 0 && initialQuery !== null) {
+      setQuery(initialQuery.split(' '))
+    }
+  }, [query, setSearchParams, initialQuery])
 
   return (
     <div className='flex'>
       <form
-       className='hashtagGroup'
-       onSubmit={submitSearch}
-       >
-        <input 
-        className='hashtagInput'
-        type='text'
-        placeholder='#hashtag'
-        value={searchString}
-        onChange={handleChange}
+        className='hashtagGroup'
+        onSubmit={submitSearch}
+      >
+        <input
+          className='hashtagInput'
+          type='text'
+          placeholder='Search filters'
+          value={searchString}
+          onChange={handleChange}
         />
-        <button disabled={searchString === ''}><img width={20} height={20} alt='search' src={search}/></button>
+        <button disabled={searchString === ''}>
+          {isLoading ?
+            <ButtonLoader /> :
+            <img width={20} height={20} alt='search' src={search} />
+          }
+        </button>
       </form>
-      { hashtag !== null &&
-      <TagLabel setHashTag={setHashTag} tag={hashtag}/>
-      }
+
       <div className='fixedWidth'>
-      {tweets.data && tweets.data.map((tweet) => (
-      <Tweet
-      public_metrics={tweet.public_metrics}
-      referenced_tweets={tweet.referenced_tweets}
-      id={tweet.id}
-      author={tweets?.includes?.users?.find(user => user.id === tweet.author_id)}
-      media={tweet?.attachments?.media_keys?.map(mkey => tweets.includes.media.find(media => mkey === media.media_key))}
-      created_at={tweet.created_at}
-      text={tweet.text}
-      key={tweet.id}
-      />)
-      
-      )}
+      <div className='tagLabels'>
+        {query !== [] &&
+          query.map(item => <TagLabel key={item} setSearchParams={setSearchParams} setQuery={setQuery} tag={item} />)
+        }
+        </div>
+        {isLoading ?
+        <div className='loader'><img src={Loader} alt='loading'/></div> :
+        tweets.data && tweets.data.map((tweet) => (
+          <Tweet
+            public_metrics={tweet.public_metrics}
+            referenced_tweets={tweet.referenced_tweets}
+            id={tweet.id}
+            author={tweets?.includes?.users?.find(user => user.id === tweet.author_id)}
+            media={tweet?.attachments?.media_keys?.map(mkey => tweets.includes.media.find(media => mkey === media.media_key))}
+            created_at={tweet.created_at}
+            text={tweet.text}
+            key={tweet.id}
+          />)
+
+        )
+        }
       </div>
     </div>
   );
