@@ -21,11 +21,13 @@ function App() {
   const [searchString, setSearchString] = useState('')
   const [query, setQuery] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  console.log(initialQuery)
 
   useEffect(() => {
     query.length === 0 && setTweets({})
   }, [query])
+  useEffect(() => {
+    if (initialQuery === ' ' || initialQuery === '#') setSearchParams({})
+  }, [initialQuery])
 
   const handleChange = (e) => {
     setSearchString(e.target.value)
@@ -33,7 +35,7 @@ function App() {
 
   const submitSearch = (e) => {
     e.preventDefault()
-    setQuery((prev => prev.concat(searchString)))
+    setQuery((prev => prev.concat(searchString).filter(item => item !== ' ' && item !== '#')))
     setSearchString('')
   }
 
@@ -51,10 +53,10 @@ function App() {
     //   console.log('socket disconnected')
     // })
     if (query.length !== 0) {
-      const filters = `${query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' ')}${query.filter(item => item.includes('@')).length > 0 ? (' ' + query.filter(item => item.includes('@')).join(' ')) : ''}`
+      const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@','from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
       setIsLoading(true)
       axios
-        .get('/api/recent', {
+        .get('http://localhost:3002/api/recent', {
           params: { filters }
         })
         .then((res) => {
@@ -66,7 +68,7 @@ function App() {
         })
       setSearchParams({ filters })
     } else if (query.length === 0 && initialQuery !== null) {
-      setQuery(initialQuery.split(' '))
+      setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#'))
     }
   }, [query, setSearchParams, initialQuery])
 

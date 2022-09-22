@@ -68,6 +68,11 @@
   gap: 15px;
 }
 
+.spacer {
+  width: 50px;
+  
+}
+
 .tagLabel {
   display: flex;
   align-items: center;
