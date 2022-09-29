@@ -8,11 +8,11 @@ const tweetSchema = new Schema({
     },
     includes: {
         type: Object,
-        required: true
+        required: false
     },
     meta: {
         type: Object,
-        required: true
+        required: false
     }
 })
 
