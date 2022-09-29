@@ -1,5 +1,6 @@
 const express = require('express')
 const {createServer} = require('http')
+const { default: mongoose } = require('mongoose')
 const { Server } = require('socket.io')
 const port = process.env.PORT || 3002
 const app = express()
@@ -30,6 +31,10 @@ io.on("connection", socket => {
 })
 io.on("disconnect", () => server.close())
 
+mongoose
+.connect('mongodb+srv://dbEugen:eilinskih92@cluster0.uw7bjw4.mongodb.net/tweets?retryWrites=true&w=majority')
+.then((res) => console.log('db connected'))
+.catch((err) => console.log(err))
 
 server.listen(port, () => {
     console.log(`server is up on ${port}`)

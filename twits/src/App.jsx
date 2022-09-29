@@ -40,6 +40,21 @@ function App() {
   }
 
   useEffect(() => {
+    setIsLoading(true)
+    axios
+        .get('http://localhost:3002/api/recent', {
+        })
+        .then((res) => {
+          console.log(res.data[0])
+          setIsLoading(false)
+          setTweets(res.data[0])
+        })
+        .catch((e) => {
+          setIsLoading(false)
+        })
+  }, [])
+
+  useEffect(() => {
     // const socket = io.connect('/')
     // socket.on('connect', () => {
     //   console.log('socket connected..')
@@ -56,12 +71,12 @@ function App() {
       const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@','from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
       setIsLoading(true)
       axios
-        .get('/api/recent', {
+        .get('http://localhost:3002/api/recent-api', {
           params: { filters }
         })
         .then((res) => {
           setIsLoading(false)
-          setTweets(res.data._realData)
+          setTweets(res.data)
         })
         .catch((e) => {
           setIsLoading(false)
@@ -71,7 +86,7 @@ function App() {
       setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#'))
     }
   }, [query, setSearchParams, initialQuery])
-
+  // !isLoading && console.log(tweets)
   return (
     <div className='flex'>
       <form
@@ -101,7 +116,7 @@ function App() {
         </div>
         {isLoading ?
         <div className='loader'><img src={Loader} alt='loading'/></div> :
-        tweets.data && tweets.data.map((tweet) => (
+        tweets?.data && tweets?.data.map((tweet) => (
           <Tweet
             public_metrics={tweet.public_metrics}
             referenced_tweets={tweet.referenced_tweets}
