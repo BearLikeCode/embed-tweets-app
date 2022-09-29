@@ -42,7 +42,7 @@ function App() {
   useEffect(() => {
     setIsLoading(true)
     axios
-        .get('http://localhost:3002/api/recent', {
+        .get('/api/recent', {
         })
         .then((res) => {
           console.log(res.data[0])
@@ -71,7 +71,7 @@ function App() {
       const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@','from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
       setIsLoading(true)
       axios
-        .get('http://localhost:3002/api/recent-api', {
+        .get('/api/recent-api', {
           params: { filters }
         })
         .then((res) => {
