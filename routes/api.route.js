@@ -50,6 +50,7 @@ router.get('/token-request', async (req, res, next) => {
 })
 
 router.get('/callback', (req, res, next) => {
+  console.log(req.session)
   // Extract tokens from query string
   const { oauth_token, oauth_verifier } = req.query;
   // Get the saved oauth_token_secret from session
