@@ -1,7 +1,5 @@
 const { ETwitterStreamEvent } = require('twitter-api-v2')
 
-ETwitterStreamEvent
-
 const TwitterApi = require('twitter-api-v2').default
 
 module.exports = async (app, socketConnection) => {
