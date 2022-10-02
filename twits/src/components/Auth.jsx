@@ -19,7 +19,7 @@ const Auth = () => {
 
     const authClickHandler = async() => {
         await axios
-            .get(`http://localhost:3002/api/token-request`)
+            .get(`/api/token-request`)
             .then((res) => window.location.href = res.data.url)
     }
     return (
