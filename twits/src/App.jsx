@@ -19,6 +19,7 @@ function App() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get('filters')
   const oauth_token = searchParams.get('oauth_token')
+  const oauth_verifier = searchParams.get('oauth_verifier')
   const [tweets, setTweets] = useState({})
   const [searchString, setSearchString] = useState('')
   const [query, setQuery] = useState([])
@@ -28,6 +29,7 @@ function App() {
   useEffect(() => {
     query.length === 0 && setTweets({})
   }, [query])
+
   useEffect(() => {
     if (initialQuery === ' ' || initialQuery === '#') setSearchParams({})
   }, [initialQuery])
@@ -35,7 +37,12 @@ function App() {
   useEffect(() => {
     if (oauth_token !== null) {
       axios
-        .get('/api/callback')
+        .get('/api/callback', {
+          params: {
+            oauth_token: oauth_token,
+            oauth_verifier: oauth_verifier
+          }
+        })
         .then(() => setIsLogged(true))
         .catch(() => setIsLogged(false))
     }
