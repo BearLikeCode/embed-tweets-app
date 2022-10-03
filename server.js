@@ -1,5 +1,5 @@
 const express = require('express')
-const sess = require('express-session')
+
 const {createServer} = require('http')
 const { default: mongoose } = require('mongoose')
 const { Server } = require('socket.io')
@@ -7,12 +7,13 @@ const port = process.env.PORT || 3002
 const app = express()
 
 const server = createServer(app)
+
+
 app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
-app.use(sess({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
 app.use('/api', require('./routes/api.route'))
 const io = new Server(server, {
     cors: {

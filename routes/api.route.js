@@ -1,15 +1,19 @@
 const { query } = require('express')
+const session = require('express-session')
+
 const Tweet = require('../server/models/Tweet')
 const fetch = require('node-fetch')
 
 
 const TwitterApi = require('twitter-api-v2').default
 const router = require('express').Router()
-var session
+
+router.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
+
 const API_KEY = "dvOwXwgmts10o7U4tm4Npp3jc"
 const API_SECRET = "UPLjyxj3kzUUduIboQCgQXLuYmHq74DTYMarnXcxm6RnRql7va"
 let loggedApp
-
+let sess
 // const client = new TwitterApi('AAAAAAAAAAAAAAAAAAAAAIOffAEAAAAAwgZmrDXsZocUQUGZqD%2F7%2BLfQGdI%3DxG8c9zec4y9Oi0Zid5qxLG417HRVRZj3vgtNhwwmbActLFQX11')
 const client = new TwitterApi({ appKey: API_KEY, appSecret: API_SECRET });
 
@@ -41,8 +45,8 @@ router.get('/token-request', async (req, res, next) => {
   try{
     const authLink = await client.generateAuthLink('https://embed-tweets.herokuapp.com/', { linkMode: 'authorize' });
     res.send(authLink)
-    session = req.session
-    session.oauth_token = authLink.oauth_token
+    sess = req.session
+    sess.oauth_token = authLink.oauth_token
   } catch (err) {
     console.log(err)
     next(err)
@@ -51,6 +55,7 @@ router.get('/token-request', async (req, res, next) => {
 
 router.get('/callback', (req, res, next) => {
   console.log(req.session)
+
   // Extract tokens from query string
   const { oauth_token, oauth_verifier } = req.query;
   // Get the saved oauth_token_secret from session
