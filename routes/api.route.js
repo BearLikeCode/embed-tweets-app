@@ -44,9 +44,10 @@ router.get('/recent-api', async (req, res, next) => {
 router.get('/token-request', async (req, res, next) => {
   try{
     const authLink = await client.generateAuthLink('https://embed-tweets.herokuapp.com/', { linkMode: 'authorize' });
-    res.send(authLink)
     sess = req.session
     sess.oauth_token = authLink.oauth_token
+    res.send(authLink)
+
   } catch (err) {
     console.log(err)
     next(err)
