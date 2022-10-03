@@ -24,8 +24,8 @@ const Auth = () => {
     }
     return (
         <div>
-            <button onClick={authClickHandler}>
-                authorize
+            <button className='authBtn' onClick={authClickHandler}>
+                authorize with Twitter
             </button>
         </div>
     )
