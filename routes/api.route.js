@@ -19,7 +19,7 @@ const client = new TwitterApi({ appKey: API_KEY, appSecret: API_SECRET });
 
 router.get('/recent-api', async (req, res, next) => {
   try {
-    const recent = await client.v2.search(req.query.filters, {
+    const recent = await loggedApp.v2.search(req.query.filters, {
         max_results: 100,
         expansions:
         'author_id,attachments.media_keys,referenced_tweets.id,referenced_tweets.id.author_id',
