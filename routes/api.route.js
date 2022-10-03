@@ -8,7 +8,7 @@ const fetch = require('node-fetch')
 const TwitterApi = require('twitter-api-v2').default
 const router = require('express').Router()
 
-router.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
+router.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true,cookie: { maxAge: (60000 * 60 * 24) }}));
 
 const API_KEY = "dvOwXwgmts10o7U4tm4Npp3jc"
 const API_SECRET = "UPLjyxj3kzUUduIboQCgQXLuYmHq74DTYMarnXcxm6RnRql7va"
