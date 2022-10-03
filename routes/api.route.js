@@ -45,7 +45,7 @@ router.get('/token-request', async (req, res, next) => {
   try{
     const authLink = await client.generateAuthLink('https://embed-tweets.herokuapp.com/', { linkMode: 'authorize' });
     sess = req.session
-    sess.oauth_token = authLink.oauth_token
+    sess.oauth_token_secret = authLink.oauth_token_secret
     res.send(authLink)
 
   } catch (err) {
