@@ -75,7 +75,7 @@ router.get('/callback', (req, res, next) => {
 
   client.login(oauth_verifier)
     .then(({ client: loggedClient, accessToken, accessSecret }) => {
-      loggedApp = loggedClient
+      loggedApp = loggedClient.currentUserV2()
       res.send(loggedClient)
       // loggedClient is an authenticated client in behalf of some user
       // Store accessToken & accessSecret somewhere
