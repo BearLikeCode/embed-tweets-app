@@ -59,7 +59,7 @@ router.get('/callback', (req, res, next) => {
   const { oauth_token, oauth_verifier } = req.query;
   // Get the saved oauth_token_secret from session
   const { oauth_token_secret } = req.session;
-res.send(oauth_token_secret)
+res.send(req.session)
 
   if (!oauth_token || !oauth_verifier || !oauth_token_secret) {
     return res.status(400).send('You denied the app or your session expired!');
