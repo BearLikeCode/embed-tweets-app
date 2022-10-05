@@ -32,6 +32,7 @@ router.get('/recent-api', async (req, res, next) => {
     // console.log(recent.data)
     // res.send(recent.data)
     Tweet.remove({}).exec() 
+    Tweet.fin
     const tweetData = new Tweet({ data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta })
     tweetData
     .save()
@@ -76,7 +77,14 @@ router.get('/callback', (req, res, next) => {
   client.login(oauth_verifier)
     .then(({ client: loggedClient, accessToken, accessSecret }) => {
       loggedApp = loggedClient
-      loggedClient.currentUser().then((response) => res.send(response))
+      loggedClient.currentUser()
+      .then((response) => {
+        Tweet.findOneAndUpdate({name: response.screen_name, id_str: response.id_str}, 
+          {expire: new Date()}, 
+          {upsert: true, new: true, setDefaultsOnInsert: true},
+          (err, res) => {if (err) return})
+        res.send(response)
+      })
       // loggedClient is an authenticated client in behalf of some user
       // Store accessToken & accessSecret somewhere
     })

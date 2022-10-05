@@ -2,15 +2,15 @@ const { Schema, model } = require("mongoose")
 const mongoose = require("mongoose")
 
 const tweetSchema = new Schema({
-    data: {
-        type: Array,
+    name: {
+        type: String,
         required: true
     },
-    includes: {
-        type: Object,
-        required: false
+    id_str: {
+        type: String,
+        required:true
     },
-    meta: {
+    tweetsList: {
         type: Object,
         required: false
     }
