@@ -40,6 +40,7 @@ router.get('/recent-api', async (req, res, next) => {
         if (err) return
         res.tweetsList = tweetsList
       })
+      res.send(user)
   } catch (err) {
     next(err)
   }
