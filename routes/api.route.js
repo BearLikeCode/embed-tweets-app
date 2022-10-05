@@ -34,13 +34,10 @@ router.get('/recent-api', async (req, res, next) => {
     // res.send(recent.data)
     const tweetsList = { data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta }
     const newdoc = Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
-      {expire: new Date()}, 
+      {tweetsList}, 
       {upsert: true, new: true, setDefaultsOnInsert: true},
       (err, res) => {
-        if (err){
-          return
-        }
-        res.tweetsList = tweetsList
+        if (err) return
       })
       res.send(newdoc)
   } catch (err) {
