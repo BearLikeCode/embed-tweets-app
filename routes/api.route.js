@@ -29,10 +29,11 @@ router.get('/recent-api', async (req, res, next) => {
     'media.fields':
       'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics'
     })
+    const user = await loggedApp.currentUser()
     // console.log(recent.data)
     // res.send(recent.data)
     const tweetsList = { data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta }
-    Tweet.findOneAndUpdate({name: response.screen_name, id_str: response.id_str}, 
+    Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
       {expire: new Date()}, 
       {upsert: true, new: true, setDefaultsOnInsert: true},
       (err, res) => {
