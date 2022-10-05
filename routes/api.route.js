@@ -31,12 +31,14 @@ router.get('/recent-api', async (req, res, next) => {
     })
     // console.log(recent.data)
     // res.send(recent.data)
-    Tweet.remove({}).exec() 
-    Tweet.fin
-    const tweetData = new Tweet({ data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta })
-    tweetData
-    .save()
-    .then(result => res.send(result))
+    const tweetsList = { data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta }
+    Tweet.findOneAndUpdate({name: response.screen_name, id_str: response.id_str}, 
+      {expire: new Date()}, 
+      {upsert: true, new: true, setDefaultsOnInsert: true},
+      (err, res) => {
+        if (err) return
+        res.tweetsList = tweetsList
+      })
   } catch (err) {
     next(err)
   }
