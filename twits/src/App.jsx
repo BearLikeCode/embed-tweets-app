@@ -73,7 +73,7 @@ function App() {
       })
     }
   }, [isLogged])
-
+console.log(tweets)
   useEffect(() => {
     // const socket = io.connect('/')
     // socket.on('connect', () => {
