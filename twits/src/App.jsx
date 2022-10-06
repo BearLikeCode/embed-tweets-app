@@ -63,7 +63,7 @@ console.log('cookies', cookies)
         })
         .then((res) => {
           setCookie('user', {name: res.data.user.name, photo: res.data.user.profile_image_url_https})
-          setCookie('tokens', {oauth_token: res.data.oauth_token, oauth_token_secret: res.data.oauth_token_secret})
+          setCookie('tokens', {accessToken: res.data.accessToken, accessSecret: res.data.accessSecret})
           setIsLogged(true)
         })
         .catch(() => setIsLogged(false))

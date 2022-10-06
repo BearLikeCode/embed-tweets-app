@@ -119,8 +119,8 @@ router.post('/me', async (req, res, next) => {
     const client = new TwitterApi({
       appKey: API_KEY,
       appSecret: API_SECRET,
-      accessToken: req.body.oauth_token,
-      accessSecret: req.body.oauth_token_secret
+      accessToken: req.body.accessToken,
+      accessSecret: req.body.accessSecret
     });
     loggedApp = client
     res.send('logged')
