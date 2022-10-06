@@ -33,9 +33,9 @@ function App() {
   }, [query])
 
   useEffect(() => {
-    console.log(cookies['connect.sid'])
-    setIsLogged(!!cookies['connect.sid'])
-  }, [cookies['connect.sid']])
+    console.log(cookies)
+    setIsLogged(!!cookies.connect)
+  }, [cookies])
 
   useEffect(() => {
     if (initialQuery === ' ' || initialQuery === '#') setSearchParams({})
