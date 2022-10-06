@@ -40,7 +40,7 @@ router.get('/recent-api', async (req, res, next) => {
         if (err) return
         
       })
-      res.send(newdoc)
+      res.send('updated')
   } catch (err) {
     next(err)
   }
@@ -99,8 +99,10 @@ router.get('/callback', (req, res, next) => {
 
 router.get('/recent', async (req, res, next) => {
   try {
-    Tweet.find() 
-    .then(result => res.send(result))
+    const user = await loggedApp.currentUser()
+
+    Tweet.findOne({id_str: user.id_str}) 
+    .then(result => res.send(result.tweetsList))
   } catch (err) {
     next(err)
   }
