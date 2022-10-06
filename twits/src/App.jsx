@@ -18,8 +18,25 @@ import Loader from './assets/circlesLoader.gif'
 import UserInfo from './components/UserInfo';
 
 function App() {
+  const optionsAmount = [
+    { value: 10, text: '10' },
+    { value: 20, text: '20' },
+    { value: 30, text: '30' },
+    { value: 50, text: '50' },
+    { value: 100, text: '100' },
+
+  ];
+  const optionsInterval = [
+    { value: 1, text: '1' },
+    { value: 3, text: '3' },
+    { value: 10, text: '10' },
+  ];
   const [searchParams, setSearchParams] = useSearchParams();
   const [cookies, setCookie, removeCookie] = useCookies();
+  const [formValues, setFormValues] = useState({
+    amount: optionsAmount[4].value,
+    interval: optionsInterval[0].value
+  })
   const initialQuery = searchParams.get('filters')
   const oauth_token = searchParams.get('oauth_token')
   const oauth_verifier = searchParams.get('oauth_verifier')
@@ -29,6 +46,19 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [isLogged, setIsLogged] = useState(!!cookies.tokens)
 
+  const handleAmountChange = ({ target: {value} }) => {
+    setFormValues({ ...formValues, amount: value })
+  }
+  const handleIntervalChange = ({ target: {value} }) => {
+    setFormValues({ ...formValues, interval: value })
+  }
+
+  useEffect(() => {
+    if (formValues.amount) {
+      setSearchParams({...searchParams, amount: formValues.amount})
+    }
+  }, [formValues?.amount])
+
   useEffect(() => {
     query.length === 0 && setTweets({})
   }, [query])
@@ -37,8 +67,8 @@ function App() {
     if (cookies.tokens) {
       axios
         .post('/api/me', {
-            accessToken: cookies.tokens.accessToken,
-            accessSecret: cookies.tokens.accessSecret
+          accessToken: cookies.tokens.accessToken,
+          accessSecret: cookies.tokens.accessSecret
         })
         .then((res) => {
           setIsLogged(true)
@@ -46,8 +76,8 @@ function App() {
         .catch(() => setIsLogged(false))
     }
   }, [])
-  
-console.log('cookies', cookies)
+
+  console.log('cookies', cookies)
   useEffect(() => {
     if (initialQuery === ' ' || initialQuery === '#') setSearchParams({})
   }, [initialQuery])
@@ -62,8 +92,8 @@ console.log('cookies', cookies)
           }
         })
         .then((res) => {
-          setCookie('user', {name: res.data.user.name, photo: res.data.user.profile_image_url_https})
-          setCookie('tokens', {accessToken: res.data.accessToken, accessSecret: res.data.accessSecret})
+          setCookie('user', { name: res.data.user.name, photo: res.data.user.profile_image_url_https })
+          setCookie('tokens', { accessToken: res.data.accessToken, accessSecret: res.data.accessSecret })
           setIsLogged(true)
         })
         .catch(() => setIsLogged(false))
@@ -82,23 +112,27 @@ console.log('cookies', cookies)
 
   useEffect(() => {
     if (isLogged) {
-    searchParams.delete('oauth_token')
-    searchParams.delete('oauth_verifier')
-    setSearchParams(searchParams)
-    setIsLoading(true)
-    axios
-      .get('/api/recent', {
-      })
-      .then((res) => {
-        setIsLoading(false)
-        setTweets(res.data)
-      })
-      .catch((e) => {
-        setIsLoading(false)
-      })
+      searchParams.delete('oauth_token')
+      searchParams.delete('oauth_verifier')
+      setSearchParams(searchParams)
+      setIsLoading(true)
+
+      const intID = setInterval(() => {
+        axios
+        .get('/api/recent', {
+        })
+        .then((res) => {
+          setIsLoading(false)
+          setTweets(res.data)
+        })
+        .catch((e) => {
+          setIsLoading(false)
+        })
+      }, formValues.interval*60000)
+          return () => clearInterval(intID)
     }
   }, [isLogged])
-console.log(tweets)
+  console.log(tweets)
   useEffect(() => {
     // const socket = io.connect('/')
     // socket.on('connect', () => {
@@ -114,10 +148,11 @@ console.log(tweets)
     // })
     if (query.length !== 0) {
       const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
+      const amount = formValues.amount
       setIsLoading(true)
       axios
         .get('/api/recent-api', {
-          params: { filters }
+          params: { filters, amount }
         })
         .then((res) => {
           setIsLoading(false)
@@ -133,11 +168,11 @@ console.log(tweets)
   }, [query, setSearchParams, initialQuery])
   return (
     <>
-    <div className='flex'>
-      {cookies.user &&
-     <UserInfo setIsLogged={setIsLogged} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name}/>
-     }
-      {!isLogged ?
+      <div className='flex'>
+        {cookies.user &&
+          <UserInfo setIsLogged={setIsLogged} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} />
+        }
+        {!isLogged ?
         <Auth /> :
         <>
           <form
@@ -158,6 +193,26 @@ console.log(tweets)
               }
             </button>
           </form>
+
+          <div className='selectControls'>
+            <label htmlFor="interval">Refresh interval, min</label>
+            <select value={formValues.interval} onChange={handleIntervalChange}>
+              {optionsInterval.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.text}
+                </option>
+              ))}
+            </select>
+
+            <label htmlFor="count">Tweets amount</label>
+            <select value={formValues.amount} onChange={handleAmountChange}>
+              {optionsAmount.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.text}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className='fixedWidth'>
             <div className='tagLabels'>
@@ -183,8 +238,8 @@ console.log(tweets)
             }
           </div>
         </>
-      }
-    </div>
+       }
+      </div>
     </>
   );
 }
