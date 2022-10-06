@@ -37,7 +37,7 @@ router.get('/recent-api', async (req, res, next) => {
       {tweetsList}, 
       {upsert: true, new: true, setDefaultsOnInsert: true}
       )
-      res.send(newData)
+      res.send(newData?.tweetsList)
   } catch (err) {
     next(err)
   }
