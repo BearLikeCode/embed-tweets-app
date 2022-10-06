@@ -66,7 +66,7 @@ function App() {
       })
       .then((res) => {
         setIsLoading(false)
-        setTweets(res)
+        setTweets(res.data)
       })
       .catch((e) => {
         setIsLoading(false)
@@ -96,7 +96,7 @@ console.log(tweets)
         })
         .then((res) => {
           setIsLoading(false)
-          setTweets(res)
+          setTweets(res.data)
         })
         .catch((e) => {
           setIsLoading(false)
