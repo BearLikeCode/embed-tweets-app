@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import NonceGenerator from 'a-nonce-generator';
 import crypto from 'crypto';
 
-const Auth = () => {
+const Auth = (props) => {
     const timestamp = Date.now()
     const ng = new NonceGenerator()
     const nonce = ng.generate();
@@ -22,8 +22,16 @@ const Auth = () => {
             .get(`/api/token-request`)
             .then((res) => window.location.href = res.data.url)
     }
+    const logOutHandler = async() => {
+        await axios
+            .get(`/api/logout`)
+            .then((res) => {
+                props.removeCookie('user')
+            })
+    }
     return (
-        <div>
+        <div className='authIntro'>
+            <h1>To continue, please authorize yourself</h1>
             <button className='authBtn' onClick={authClickHandler}>
                 authorize with Twitter
             </button>

@@ -19,7 +19,6 @@ import UserInfo from './components/UserInfo';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [user, setUser] = useState(null)
   const [cookies, setCookie, removeCookie] = useCookies();
   const initialQuery = searchParams.get('filters')
   const oauth_token = searchParams.get('oauth_token')
@@ -28,7 +27,7 @@ function App() {
   const [searchString, setSearchString] = useState('')
   const [query, setQuery] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [isLogged, setIsLogged] = useState(false)
+  const [isLogged, setIsLogged] = useState(!!cookies.user)
 
   useEffect(() => {
     query.length === 0 && setTweets({})
@@ -120,10 +119,12 @@ console.log(tweets)
   }, [query, setSearchParams, initialQuery])
   return (
     <>
-    {cookies.user && <UserInfo photo={cookies.user.photo} name={cookies.user.name}/>}
     <div className='flex'>
+      {/* {cookies.user && */}
+     <UserInfo photo={"https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"} name={'eugen'}/>
+     {/* } */}
       {!isLogged ?
-        <Auth /> :
+        <Auth setIsLogged={setIsLogged} removeCookie={removeCookie}/> :
         <>
           <form
             className='hashtagGroup'

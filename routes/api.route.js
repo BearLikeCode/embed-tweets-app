@@ -105,4 +105,13 @@ router.get('/recent', async (req, res, next) => {
   }
 })
 
+router.get('/logout', async (req, res, next) => {
+  try {
+    loggedApp = undefined
+    res.send('cleared')
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router
