@@ -32,11 +32,8 @@ function App() {
     query.length === 0 && setTweets({})
   }, [query])
 
-  useEffect(() => {
-    console.log(cookies)
-    setIsLogged(!!cookies.connect)
-  }, [cookies])
-
+  
+console.log('cookies', cookies)
   useEffect(() => {
     if (initialQuery === ' ' || initialQuery === '#') setSearchParams({})
   }, [initialQuery])
@@ -50,7 +47,11 @@ function App() {
             oauth_verifier: oauth_verifier
           }
         })
-        .then(() => setIsLogged(true))
+        .then(() => {
+          setIsLogged(true)
+          searchParams.delete('oauth_token')
+          searchParams.delete('oauth_verifier')
+        })
         .catch(() => setIsLogged(false))
     }
   }, [oauth_token])
@@ -67,8 +68,6 @@ function App() {
 
   useEffect(() => {
     if (isLogged) {
-    searchParams.delete('oauth_token')
-    searchParams.delete('oauth_verifier')
     setIsLoading(true)
     axios
       .get('/api/recent', {
