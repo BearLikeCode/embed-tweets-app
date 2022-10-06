@@ -49,8 +49,6 @@ console.log('cookies', cookies)
         })
         .then(() => {
           setIsLogged(true)
-          searchParams.delete('oauth_token')
-          searchParams.delete('oauth_verifier')
         })
         .catch(() => setIsLogged(false))
     }
@@ -68,6 +66,9 @@ console.log('cookies', cookies)
 
   useEffect(() => {
     if (isLogged) {
+    searchParams.delete('oauth_token')
+    searchParams.delete('oauth_verifier')
+    setSearchParams(searchParams)
     setIsLoading(true)
     axios
       .get('/api/recent', {
