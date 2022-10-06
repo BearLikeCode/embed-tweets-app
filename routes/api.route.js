@@ -3,11 +3,12 @@ const session = require('express-session')
 
 const Tweet = require('../server/models/Tweet')
 const fetch = require('node-fetch')
+const bodyParser = require('body-parser')
 
 
 const TwitterApi = require('twitter-api-v2').default
 const router = require('express').Router()
-
+router.use(bodyParser())
 router.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true,cookie: { maxAge: (60000 * 60 * 24) }}));
 
 const API_KEY = "dvOwXwgmts10o7U4tm4Npp3jc"

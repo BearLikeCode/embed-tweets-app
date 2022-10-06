@@ -3,11 +3,11 @@ const express = require('express')
 const {createServer} = require('http')
 const { default: mongoose } = require('mongoose')
 const { Server } = require('socket.io')
+
 const port = process.env.PORT || 3002
 const app = express()
 
 const server = createServer(app)
-
 
 app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
