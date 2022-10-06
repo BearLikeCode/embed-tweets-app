@@ -106,9 +106,9 @@
   display: flex;
   gap: 20px;
   align-items: center;
-  position: absolute;
+  /* position: absolute;
   top: 20px;
-  right: 20px;
+  right: 20px; */
 }
 .userContainer img {
   border-radius: 50%;

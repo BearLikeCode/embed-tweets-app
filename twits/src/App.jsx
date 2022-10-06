@@ -134,11 +134,11 @@ console.log(tweets)
   return (
     <>
     <div className='flex'>
-      {/* {cookies.user && */}
-     <UserInfo photo={"https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"} name={'eugen'}/>
-     {/* } */}
+      {cookies.user &&
+     <UserInfo setIsLogged={setIsLogged} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name}/>
+     }
       {!isLogged ?
-        <Auth setIsLogged={setIsLogged} removeCookie={removeCookie}/> :
+        <Auth /> :
         <>
           <form
             className='hashtagGroup'

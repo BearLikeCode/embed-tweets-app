@@ -22,13 +22,7 @@ const Auth = (props) => {
             .get(`/api/token-request`)
             .then((res) => window.location.href = res.data.url)
     }
-    const logOutHandler = async() => {
-        await axios
-            .get(`/api/logout`)
-            .then((res) => {
-                props.removeCookie('user')
-            })
-    }
+    
     return (
         <div className='authIntro'>
             <h1>To continue, please authorize yourself</h1>
