@@ -59,6 +59,7 @@ function App() {
   }
 
   useEffect(() => {
+    if (isLogged) {
     setIsLoading(true)
     axios
       .get('/api/recent', {
@@ -70,7 +71,8 @@ function App() {
       .catch((e) => {
         setIsLoading(false)
       })
-  }, [])
+    }
+  }, [isLogged])
 
   useEffect(() => {
     // const socket = io.connect('/')
