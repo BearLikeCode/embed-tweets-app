@@ -15,9 +15,11 @@ import ButtonLoader from './components/ButtonLoader';
 import Auth from './components/Auth'
 
 import Loader from './assets/circlesLoader.gif'
+import UserInfo from './components/UserInfo';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [user, setUser] = useState(null)
   const [cookies, setCookie, removeCookie] = useCookies();
   const initialQuery = searchParams.get('filters')
   const oauth_token = searchParams.get('oauth_token')
@@ -47,7 +49,8 @@ console.log('cookies', cookies)
             oauth_verifier: oauth_verifier
           }
         })
-        .then(() => {
+        .then((res) => {
+          setCookie('user', {name: res.data.name, photo: res.data.profile_image_url_https})
           setIsLogged(true)
         })
         .catch(() => setIsLogged(false))
@@ -116,6 +119,8 @@ console.log(tweets)
     }
   }, [query, setSearchParams, initialQuery])
   return (
+    <>
+    {cookies.user && <UserInfo photo={cookies.user.photo} name={cookies.user.name}/>}
     <div className='flex'>
       {!isLogged ?
         <Auth /> :
@@ -165,6 +170,7 @@ console.log(tweets)
         </>
       }
     </div>
+    </>
   );
 }
 
