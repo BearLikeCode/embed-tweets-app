@@ -27,12 +27,25 @@ function App() {
   const [searchString, setSearchString] = useState('')
   const [query, setQuery] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [isLogged, setIsLogged] = useState(!!cookies.user)
+  const [isLogged, setIsLogged] = useState(!!cookies.tokens)
 
   useEffect(() => {
     query.length === 0 && setTweets({})
   }, [query])
 
+  useEffect(() => {
+    if (cookies.tokens) {
+      axios
+        .post('/api/me', {
+            accessToken: cookies.tokens.accessToken,
+            accessSecret: cookies.tokens.accessSecret
+        })
+        .then((res) => {
+          setIsLogged(true)
+        })
+        .catch(() => setIsLogged(false))
+    }
+  }, [])
   
 console.log('cookies', cookies)
   useEffect(() => {
@@ -49,7 +62,8 @@ console.log('cookies', cookies)
           }
         })
         .then((res) => {
-          setCookie('user', {name: res.data.name, photo: res.data.profile_image_url_https})
+          setCookie('user', {name: res.data.user.name, photo: res.data.user.profile_image_url_https})
+          setCookie('tokens', {oauth_token: res.data.oauth_token, oauth_token_secret: res.data.oauth_token_secret})
           setIsLogged(true)
         })
         .catch(() => setIsLogged(false))

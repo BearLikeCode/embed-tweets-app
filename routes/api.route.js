@@ -84,7 +84,7 @@ router.get('/callback', (req, res, next) => {
           {expire: new Date()}, 
           {upsert: true, new: true, setDefaultsOnInsert: true},
           (err, res) => {if (err) return})
-        res.send(response)
+        res.send({user: response, accessToken, accessSecret})
       })
       // loggedClient is an authenticated client in behalf of some user
       // Store accessToken & accessSecret somewhere
@@ -114,4 +114,18 @@ router.get('/logout', async (req, res, next) => {
   }
 })
 
+router.post('/me', async (req, res, next) => {
+  try {
+    const client = new TwitterApi({
+      appKey: API_KEY,
+      appSecret: API_SECRET,
+      accessToken: req.body.oauth_token,
+      accessSecret: req.body.oauth_token_secret
+    });
+    loggedApp = client
+    res.send('logged')
+  } catch (err) {
+    next(err)
+  }
+})
 module.exports = router
