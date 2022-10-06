@@ -102,7 +102,7 @@ router.get('/recent', async (req, res, next) => {
     const user = await loggedApp.currentUser()
 
     Tweet.findOne({id_str: user.id_str}) 
-    .then(result => res.send(result.tweetsList))
+    .then(result => res.send(result.tweetsList || {}))
   } catch (err) {
     next(err)
   }
