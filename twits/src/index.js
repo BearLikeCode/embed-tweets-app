@@ -3,11 +3,16 @@ import './index.css';
 import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom'
 import App from './App';
+import { CookiesProvider } from 'react-cookie';
 
 const root = document.getElementById('root');
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter><App /></BrowserRouter>
+    <BrowserRouter>
+    <CookiesProvider>
+    <App />
+    </CookiesProvider>
+    </BrowserRouter>
   </React.StrictMode>, 
   root
 );

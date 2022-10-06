@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
@@ -17,6 +18,7 @@ import Loader from './assets/circlesLoader.gif'
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [cookies, setCookie, removeCookie] = useCookies();
   const initialQuery = searchParams.get('filters')
   const oauth_token = searchParams.get('oauth_token')
   const oauth_verifier = searchParams.get('oauth_verifier')
@@ -29,6 +31,11 @@ function App() {
   useEffect(() => {
     query.length === 0 && setTweets({})
   }, [query])
+
+  useEffect(() => {
+    console.log(cookies['connect.sid'])
+    setIsLogged(!!cookies['connect.sid'])
+  }, [cookies['connect.sid']])
 
   useEffect(() => {
     if (initialQuery === ' ' || initialQuery === '#') setSearchParams({})
@@ -60,6 +67,8 @@ function App() {
 
   useEffect(() => {
     if (isLogged) {
+    searchParams.delete('oauth_token')
+    searchParams.delete('oauth_verifier')
     setIsLoading(true)
     axios
       .get('/api/recent', {
