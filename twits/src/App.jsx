@@ -67,11 +67,12 @@ function App() {
   }, [query])
 
   useEffect(() => {
+    tweets.data && 
     console.log('scroll')
     tweetRefs.current.forEach((tweet) => {
       setTimeout(() => tweet.scrollIntoView({behavior: 'smooth'}), 4000)
     })
-  }, [tweetRefs.current.length])
+  }, [tweets])
 
   useEffect(() => {
     if (cookies.tokens) {
