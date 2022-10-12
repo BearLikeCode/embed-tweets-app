@@ -227,7 +227,7 @@ function App() {
               <div className='loader'><img src={Loader} alt='loading' /></div> :
               tweets?.data && tweets?.data.map((tweet, ind) => (
                 <Tweet
-                  ref={el => (tweetRefs?.current[ind] = el)}
+                  ref={tweetRefs?.current[ind]}
                   public_metrics={tweet.public_metrics}
                   referenced_tweets={tweet.referenced_tweets}
                   id={tweet.id}
