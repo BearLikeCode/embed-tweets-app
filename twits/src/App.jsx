@@ -67,6 +67,7 @@ function App() {
   }, [query])
 
   useEffect(() => {
+    tweets.data &&
     tweetRefs.current[25].scrollIntoView({behavior: 'smooth'})
   }, [tweets])
 
