@@ -32,7 +32,7 @@ function App() {
     { value: 10, text: '10' },
   ];
 
-  const tweetRefs = useRef()
+  const tweetRefs = useRef([])
   console.log('ref',tweetRefs.current)
   const [searchParams, setSearchParams] = useSearchParams();
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -227,7 +227,7 @@ function App() {
               <div className='loader'><img src={Loader} alt='loading' /></div> :
               tweets?.data && tweets?.data.map((tweet, ind) => (
                 <Tweet
-                  ref={tweetRefs?.current[ind]}
+                  ref={el => (tweetRefs?.current[ind] = el)}
                   public_metrics={tweet.public_metrics}
                   referenced_tweets={tweet.referenced_tweets}
                   id={tweet.id}
