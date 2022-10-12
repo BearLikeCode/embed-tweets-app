@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import comma from 'comma-number';
 import './Tweet.css';
 
-const Tweet = React.forwardRef((ref, {
+const Tweet = React.forwardRef(({
   text,
   id,
   author,
@@ -11,7 +11,7 @@ const Tweet = React.forwardRef((ref, {
   created_at,
   public_metrics,
   referenced_tweets
-}) => {
+}, ref) => {
   const authorUrl = `https://twitter.com/${author?.username}`;
   const likeUrl = `https://twitter.com/intent/like?tweet_id=${id}`;
   const retweetUrl = `https://twitter.com/intent/retweet?tweet_id=${id}`;
