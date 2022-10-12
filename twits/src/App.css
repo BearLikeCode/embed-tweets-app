@@ -6,6 +6,7 @@
   align-items: center;
   gap: 15px;
   height: 100vh;
+  transition: all 0.8s;
 }
 
 .hashtagGroup {
