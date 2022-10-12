@@ -122,7 +122,7 @@ function App() {
 
       const intID = setInterval(() => {
         axios
-        .get('http://localhost:3002/api/recent', {
+        .get('/api/recent', {
         })
         .then((res) => {
           setIsLoading(false)
