@@ -114,7 +114,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (!isLogged) {
+    if (isLogged) {
       searchParams.delete('oauth_token')
       searchParams.delete('oauth_verifier')
       setSearchParams(searchParams)
