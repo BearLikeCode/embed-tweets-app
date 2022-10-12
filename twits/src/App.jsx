@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
@@ -31,6 +31,9 @@ function App() {
     { value: 3, text: '3' },
     { value: 10, text: '10' },
   ];
+
+  const tweetRefs = useRef()
+  console.log(tweetRefs.current)
   const [searchParams, setSearchParams] = useSearchParams();
   const [cookies, setCookie, removeCookie] = useCookies();
   const [formValues, setFormValues] = useState({
@@ -111,7 +114,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (isLogged) {
+    if (!isLogged) {
       searchParams.delete('oauth_token')
       searchParams.delete('oauth_verifier')
       setSearchParams(searchParams)
@@ -119,7 +122,7 @@ function App() {
 
       const intID = setInterval(() => {
         axios
-        .get('/api/recent', {
+        .get('http://localhost:3002/api/recent', {
         })
         .then((res) => {
           setIsLoading(false)
@@ -222,8 +225,9 @@ function App() {
             </div>
             {isLoading ?
               <div className='loader'><img src={Loader} alt='loading' /></div> :
-              tweets?.data && tweets?.data.map((tweet) => (
+              tweets?.data && tweets?.data.map((tweet, ind) => (
                 <Tweet
+                  ref={tweetRefs.current[ind]}
                   public_metrics={tweet.public_metrics}
                   referenced_tweets={tweet.referenced_tweets}
                   id={tweet.id}
