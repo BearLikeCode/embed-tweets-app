@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import comma from 'comma-number';
 import './Tweet.css';
 
-const Tweet = React.forwardRef(({
+const Tweet = ({
   text,
   id,
   author,
@@ -11,7 +11,7 @@ const Tweet = React.forwardRef(({
   created_at,
   public_metrics,
   referenced_tweets
-}, ref) => {
+}) => {
   const authorUrl = `https://twitter.com/${author?.username}`;
   const likeUrl = `https://twitter.com/intent/like?tweet_id=${id}`;
   const retweetUrl = `https://twitter.com/intent/retweet?tweet_id=${id}`;
@@ -23,7 +23,7 @@ const Tweet = React.forwardRef(({
     referenced_tweets && referenced_tweets.find((t) => t.type === 'quoted');
 
   return (
-    <div ref={ref} className=" TweetContainer ">
+    <div className=" TweetContainer ">
       <div className="TweetTitles ">
         <a
           className=" TweetAvatarWrapper"
@@ -159,6 +159,6 @@ const Tweet = React.forwardRef(({
       </div>
     </div>
   );
-})
+}
 
 export default Tweet
