@@ -67,9 +67,8 @@ function App() {
   }, [query])
 
   useEffect(() => {
-    tweetRefs.current.length !== 0 &&
+    console.log('scroll')
     tweetRefs.current.forEach((tweet) => {
-      console.log('scroll')
       setTimeout(() => tweet.scrollIntoView({behavior: 'smooth'}), 4000)
     })
   }, [tweetRefs.current.length])
