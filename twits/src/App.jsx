@@ -67,6 +67,14 @@ function App() {
   }, [query])
 
   useEffect(() => {
+    tweetRefs.current.length !== 0 &&
+    tweetRefs.current.forEach((tweet) => {
+      setTimeout(() => tweet.scrollIntoView({behavior: 'smooth'}), 4000)
+      
+    })
+  }, [tweetRefs.current.length])
+
+  useEffect(() => {
     if (cookies.tokens) {
       axios
         .post('/api/me', {
