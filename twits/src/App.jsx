@@ -69,12 +69,11 @@ function App() {
 
   useEffect(() => {
     if (tweets.data) {
-      tweets.data.forEach(async(tweet, ind) => await scroller.scrollTo(ind.toString(), {
-        duration: 1500,
-        delay: 500,
+      scroller.scrollTo('1', {
+        duration: 3500,
+        delay: 2000,
         smooth: true,
       })
-      )
     //   let ind = 0
     //   const intv = setInterval(() => {
     //     ind++
