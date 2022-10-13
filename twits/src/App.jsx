@@ -68,20 +68,27 @@ function App() {
   }, [query])
 
   useEffect(() => {
+    
     if (tweets.data) {
-      scroller.scrollTo('1', {
+      let ind = 0
+      const intv = setInterval(() => {
+        ind++
+        scroller.scrollTo(ind.toString(), {
         duration: 3500,
         delay: 2000,
         smooth: true,
       })
+      })
+      
     //   let ind = 0
     //   const intv = setInterval(() => {
     //     ind++
     //     if(ind === tweetRefs.current.length) return
     //     tweetRefs.current[ind].scrollIntoView({behavior: 'smooth'})
     //   }, 4000)
+    return () => clearInterval(intv)
     }
-  }, [tweets])
+  }, [tweets.length])
 
   useEffect(() => {
     if (cookies.tokens) {
