@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
-
+import * as Scroll from 'react-scroll';
+import { Link, Button, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import Tweet from './components/Tweet';
 
 import './App.css'
@@ -18,6 +18,7 @@ import Loader from './assets/circlesLoader.gif'
 import UserInfo from './components/UserInfo';
 
 function App() {
+
   const optionsAmount = [
     { value: 10, text: '10' },
     { value: 20, text: '20' },
@@ -67,8 +68,20 @@ function App() {
   }, [query])
 
   useEffect(() => {
-    tweets.data &&
-    setTimeout(() => tweetRefs.current[25].scrollIntoView({behavior: 'smooth'}), 4000)
+    if (tweets.data) {
+      tweets.data.forEach(async(tweet, ind) => await scroller.scrollTo(ind.toString(), {
+        duration: 1500,
+        delay: 500,
+        smooth: true,
+      })
+      )
+    //   let ind = 0
+    //   const intv = setInterval(() => {
+    //     ind++
+    //     if(ind === tweetRefs.current.length) return
+    //     tweetRefs.current[ind].scrollIntoView({behavior: 'smooth'})
+    //   }, 4000)
+    }
   }, [tweets])
 
   useEffect(() => {
@@ -232,7 +245,8 @@ function App() {
               <div className='loader'><img src={Loader} alt='loading' /></div> :
               tweets?.data && tweets?.data.map((tweet, ind) => {
                 return (
-                <div ref={el => (tweetRefs.current[ind] = el)}>
+                // <div ref={el => (tweetRefs.current[ind] = el)}>
+                <Element name={ind}>
                 <Tweet
                   public_metrics={tweet.public_metrics}
                   referenced_tweets={tweet.referenced_tweets}
@@ -243,7 +257,9 @@ function App() {
                   text={tweet.text}
                   key={tweet.id}
                 />
-                </div>)}
+                </Element>
+                {/* </div> */}
+                )}
 
               )
             }
