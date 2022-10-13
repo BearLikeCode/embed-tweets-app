@@ -78,7 +78,7 @@ function App() {
         delay: 2000,
         smooth: true,
       })
-      })
+      }, 5500)
       
     //   let ind = 0
     //   const intv = setInterval(() => {
