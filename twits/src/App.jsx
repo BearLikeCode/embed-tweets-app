@@ -68,24 +68,17 @@ function App() {
   }, [query])
 
   useEffect(() => {
-    
     if (tweets.data) {
       let ind = 0
       const intv = setInterval(() => {
         ind++
+        console.log(ind)
         scroller.scrollTo(ind.toString(), {
         duration: 3500,
         delay: 2000,
         smooth: true,
       })
       }, 5500)
-      
-    //   let ind = 0
-    //   const intv = setInterval(() => {
-    //     ind++
-    //     if(ind === tweetRefs.current.length) return
-    //     tweetRefs.current[ind].scrollIntoView({behavior: 'smooth'})
-    //   }, 4000)
     return () => clearInterval(intv)
     }
   }, [tweets.length])
