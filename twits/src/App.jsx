@@ -66,7 +66,7 @@ function App() {
   useEffect(() => {
     query.length === 0 && setTweets({})
   }, [query])
-
+ console.log(JSON.stringify(tweets))
   useEffect(() => {
     if (tweets.data) {
       let ind = 0
@@ -75,7 +75,7 @@ function App() {
         console.log(ind)
         scroller.scrollTo(ind.toString(), {
         duration: 3500,
-        delay: 2000,
+        delay: 0 ,
         smooth: true,
       })
       }, 5500)
