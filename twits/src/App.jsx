@@ -137,8 +137,12 @@ function App() {
       searchParams.delete('oauth_verifier')
       setSearchParams(searchParams)
       setIsLoading(true)
+      const intervalId = window.setInterval(() => {},0);
 
-      const intID = setInterval(() => {
+      for (let i = 1; i < intervalId; i++) {
+        window.clearInterval(i);
+      }
+        const intID = setInterval(() => {
         console.log('fetch in interval')
         axios
         .get('/api/recent', {
@@ -157,7 +161,8 @@ function App() {
       }, formValues.interval*60000)
           return () => clearInterval(intID)
     }
-  }, [isLogged])
+
+  }, [isLogged, tweets])
   console.log(tweets)
   useEffect(() => {
     // const socket = io.connect('/')
