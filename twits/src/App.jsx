@@ -145,8 +145,8 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-          console.log(res.data.data.map(tweet => tweet.id))
-          console.log(!!(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index])))
+          console.log(tweets.data.map(tweet => tweet.id))
+          console.log(!!(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => tweets?.data?.map(tweet => tweet.id).includes(value))))
           if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
             setTweets(res.data)
             }
