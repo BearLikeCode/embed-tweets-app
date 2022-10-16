@@ -69,22 +69,6 @@ function App() {
   }, [query])
 
   useEffect(() => {
-    if (tweets.data) {
-      let ind = 0
-      const intv = setInterval(() => {
-        ind++
-        console.log(ind)
-        scroller.scrollTo(ind.toString(), {
-        duration: 3500,
-        delay: 0 ,
-        smooth: true,
-      })
-      }, 5500)
-    return () => clearInterval(intv)
-    }
-  }, [tweets ])
-
-  useEffect(() => {
     if (cookies.tokens) {
       axios
         .post('/api/me', {
@@ -163,7 +147,23 @@ function App() {
     }
 
   }, [isLogged, tweets])
-  console.log(tweets)
+  
+  useEffect(() => {
+    if (tweets.data) {
+      let ind = 0
+      const intv = setInterval(() => {
+        ind++
+        console.log(ind)
+        scroller.scrollTo(ind.toString(), {
+        duration: 3500,
+        delay: 0 ,
+        smooth: true,
+      })
+      }, 5500)
+    return () => clearInterval(intv)
+    }
+  }, [tweets ])
+
   useEffect(() => {
     // const socket = io.connect('/')
     // socket.on('connect', () => {
