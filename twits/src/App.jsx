@@ -144,7 +144,7 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-          !arrayDeepEqual(res.data.data, tweets.data) && setTweets(res.data)
+          (tweets.data === undefined || !arrayDeepEqual(res.data.data, tweets.data)) && setTweets(res.data)
         })
         .catch((e) => {
           setIsLoading(false)
