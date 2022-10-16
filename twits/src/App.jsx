@@ -115,7 +115,7 @@ function App() {
     setSearchString('')
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (isLogged) {
       searchParams.delete('oauth_token')
       searchParams.delete('oauth_verifier')
@@ -148,7 +148,7 @@ function App() {
 
   }, [isLogged, tweets])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (tweets.data) {
       let ind = 0
       const intv = setInterval(() => {
