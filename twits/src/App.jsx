@@ -145,6 +145,7 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
+          console.log(arrayDeepEqual(res.data.data.map(tweet => tweet.id), tweets.data.map(tweet => tweet.id)))
           if (tweets.data === undefined || arrayDeepEqual(res.data.data.map(tweet => tweet.id), tweets.data.map(tweet => tweet.id))) {
             setTweets(res.data)
             }
