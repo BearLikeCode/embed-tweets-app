@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import * as Scroll from 'react-scroll';
 import { Link, Button, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import Tweet from './components/Tweet';
@@ -115,7 +115,7 @@ function App() {
     setSearchString('')
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isLogged) {
       searchParams.delete('oauth_token')
       searchParams.delete('oauth_verifier')
@@ -147,8 +147,8 @@ function App() {
     }
 
   }, [isLogged, tweets])
-  
-  useEffect(() => {
+
+  useLayoutEffect(() => {
     if (tweets.data) {
       let ind = 0
       const intv = setInterval(() => {
