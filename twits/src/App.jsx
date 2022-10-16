@@ -67,6 +67,7 @@ function App() {
   useEffect(() => {
     query.length === 0 && setTweets({})
   }, [query])
+
   useEffect(() => {
     if (tweets.data) {
       let ind = 0
@@ -81,7 +82,7 @@ function App() {
       }, 5500)
     return () => clearInterval(intv)
     }
-  }, [tweets, ])
+  }, [tweets ])
 
   useEffect(() => {
     if (cookies.tokens) {
@@ -144,9 +145,10 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-          console.log('fetched!')
+          console.log('isequal', arrayDeepEqual(res.data.data, tweets.data))
           if (tweets.data === undefined || arrayDeepEqual(res.data.data, tweets.data)) {
-             setTweets(res.data)
+            console.log('setTweets!')
+            setTweets(res.data)
             }
         })
         .catch((e) => {
