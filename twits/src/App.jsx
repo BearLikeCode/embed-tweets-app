@@ -145,8 +145,9 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-          console.log(!!(res.data.data.length === tweets.data.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets.data.map(tweet => tweet.id)[index])))
-          if (tweets.data === undefined || arrayDeepEqual(res.data.data.map(tweet => tweet.id), tweets.data.map(tweet => tweet.id))) {
+          console.log(res.data.data.map(tweet => tweet.id))
+          console.log(!!(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index])))
+          if (tweets.data === undefined || arrayDeepEqual(res.data.data.map(tweet => tweet.id), tweets?.data.map(tweet => tweet.id))) {
             setTweets(res.data)
             }
         })
