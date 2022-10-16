@@ -144,7 +144,7 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-          console.log(!!(tweets.data === undefined || !arrayDeepEqual(res.data.data, tweets.data)))
+          console.log(arrayDeepEqual(res.data.data, tweets.data))
           if (tweets.data === undefined || !arrayDeepEqual(res.data.data, tweets.data)) {
              setTweets(res.data)
             }
