@@ -16,6 +16,7 @@ import Auth from './components/Auth'
 
 import Loader from './assets/circlesLoader.gif'
 import UserInfo from './components/UserInfo';
+import { arrayDeepEqual } from './helpers';
 
 function App() {
 
@@ -80,7 +81,7 @@ function App() {
       }, 5500)
     return () => clearInterval(intv)
     }
-  }, [tweets])
+  }, [tweets, ])
 
   useEffect(() => {
     if (cookies.tokens) {
@@ -143,7 +144,7 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-          setTweets(res.data)
+          !arrayDeepEqual(res.data, tweets) && setTweets(res.data)
         })
         .catch((e) => {
           setIsLoading(false)
