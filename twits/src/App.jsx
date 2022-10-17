@@ -133,7 +133,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (isLogged && tweets.data.length > 0) {
+    if (isLogged && tweets?.data?.length > 0) {
       searchParams.delete('oauth_token')
       searchParams.delete('oauth_verifier')
       setSearchParams(searchParams)
