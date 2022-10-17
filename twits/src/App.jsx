@@ -116,6 +116,7 @@ function App() {
   }
 
   useEffect(() => {
+    if (isLogged) {
     searchParams.delete('oauth_token')
     searchParams.delete('oauth_verifier')
     setSearchParams(searchParams)
@@ -129,15 +130,11 @@ function App() {
         })
         .catch((e) => {
           setIsLoading(false)
-        })
-  }, [])
+        })}
+  }, [isLogged])
 
   useEffect(() => {
     if (isLogged && tweets?.data?.length > 0) {
-      searchParams.delete('oauth_token')
-      searchParams.delete('oauth_verifier')
-      setSearchParams(searchParams)
-      setIsLoading(true)
       const intervalId = window.setInterval(() => {},0);
 
       for (let i = 1; i <= intervalId; i++) {
