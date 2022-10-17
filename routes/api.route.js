@@ -23,8 +23,8 @@ router.get('/recent-api', async (req, res, next) => {
   try {
     const recent = await loggedApp.v2.search(req.query.filters, {
         max_results: req.query.amount,
-        start_time: new Date(startTime),
-        sort_order: 'relevancy',
+        // start_time: new Date(startTime),
+        // sort_order: 'relevancy',
         expansions:
         'author_id,attachments.media_keys',
     'tweet.fields':
