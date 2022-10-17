@@ -146,13 +146,9 @@ function App() {
           return () => clearInterval(intID)
     }
 
-  }, [isLogged, tweets])
+  }, [isLogged])
 
   useEffect(() => {
-    const intervalId = window.setInterval(() => {},0);
-    for (let i = 1; i <= intervalId; i++) {
-      window.clearInterval(i);
-    }
     if (tweets?.data?.length > 0) {
       let ind = 0
       const intv = setInterval(() => {
