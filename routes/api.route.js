@@ -19,13 +19,16 @@ let sess
 const client = new TwitterApi({ appKey: API_KEY, appSecret: API_SECRET });
 
 router.get('/recent-api', async (req, res, next) => {
+  const startTime = new Date() - ((60000 * 60) *48)
   try {
     const recent = await loggedApp.v2.search(req.query.filters, {
         max_results: req.query.amount,
+        start_time: new Date(startTime),
+        sort_order: 'relevancy',
         expansions:
-        'author_id,attachments.media_keys,referenced_tweets.id,referenced_tweets.id.author_id',
+        'author_id,attachments.media_keys',
     'tweet.fields':
-      'attachments,author_id,public_metrics,created_at,id,in_reply_to_user_id,referenced_tweets,text',
+      'attachments,author_id,public_metrics,created_at,id,in_reply_to_user_id,text',
     'user.fields': 'id,name,profile_image_url,protected,url,username,verified',
     'media.fields':
       'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics'

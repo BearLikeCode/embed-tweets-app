@@ -10,7 +10,7 @@ const Tweet = ({
   media,
   created_at,
   public_metrics,
-  referenced_tweets
+  // referenced_tweets
 }) => {
   const authorUrl = `https://twitter.com/${author?.username}`;
   const likeUrl = `https://twitter.com/intent/like?tweet_id=${id}`;
@@ -20,7 +20,7 @@ const Tweet = ({
   const createdAt = new Date(created_at);
 
   const formattedText = text?.replace(/https:\/\/[\n\S]+/g, '');
-    referenced_tweets && referenced_tweets.find((t) => t.type === 'quoted');
+    // referenced_tweets && referenced_tweets.find((t) => t.type === 'quoted');
 
   return (
     <div className=" TweetContainer ">

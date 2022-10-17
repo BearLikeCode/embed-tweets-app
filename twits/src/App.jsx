@@ -16,7 +16,6 @@ import Auth from './components/Auth'
 
 import Loader from './assets/circlesLoader.gif'
 import UserInfo from './components/UserInfo';
-import { arrayDeepEqual } from './helpers';
 
 function App() {
 
@@ -274,7 +273,7 @@ function App() {
                 <Element name={ind}>
                 <Tweet
                   public_metrics={tweet.public_metrics}
-                  referenced_tweets={tweet.referenced_tweets}
+                  // referenced_tweets={tweet.referenced_tweets}
                   id={tweet.id}
                   author={tweets?.includes?.users?.find(user => user.id === tweet.author_id)}
                   media={tweet?.attachments?.media_keys?.map(mkey => tweets.includes.media.find(media => mkey === media.media_key))}
