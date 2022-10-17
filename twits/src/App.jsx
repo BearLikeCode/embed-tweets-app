@@ -149,7 +149,7 @@ function App() {
   }, [isLogged, tweets])
 
   useEffect(() => {
-    if (tweets.data.length > 0) {
+    if (tweets?.data?.length > 0) {
       let ind = 0
       const intv = setInterval(() => {
         if (ind === tweets.length - 1) {
