@@ -116,7 +116,24 @@ function App() {
   }
 
   useEffect(() => {
-    if (isLogged) {
+    searchParams.delete('oauth_token')
+    searchParams.delete('oauth_verifier')
+    setSearchParams(searchParams)
+    setIsLoading(true)
+    axios
+        .get('/api/recent', {
+        })
+        .then((res) => {
+          setIsLoading(false)
+            setTweets(res.data)
+        })
+        .catch((e) => {
+          setIsLoading(false)
+        })
+  }, [])
+
+  useEffect(() => {
+    if (isLogged && tweets.data.length > 0) {
       searchParams.delete('oauth_token')
       searchParams.delete('oauth_verifier')
       setSearchParams(searchParams)
@@ -146,7 +163,7 @@ function App() {
           return () => clearInterval(intID)
     }
 
-  }, [isLogged])
+  }, [isLogged, tweets])
 
   useEffect(() => {
     if (tweets?.data?.length > 0) {
