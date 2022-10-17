@@ -152,6 +152,8 @@ function App() {
     if (tweets.data) {
       let ind = 0
       const intv = setInterval(() => {
+        if (ind === tweets.length - 1) {
+        clearInterval(intv)}
         ind++
         console.log(ind)
         scroller.scrollTo(ind.toString(), {
