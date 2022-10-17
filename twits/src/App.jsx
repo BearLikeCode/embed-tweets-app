@@ -123,7 +123,7 @@ function App() {
       setIsLoading(true)
       const intervalId = window.setInterval(() => {},0);
 
-      for (let i = 1; i < intervalId; i++) {
+      for (let i = 1; i <= intervalId; i++) {
         window.clearInterval(i);
       }
         const intID = setInterval(() => {
@@ -149,11 +149,13 @@ function App() {
   }, [isLogged, tweets])
 
   useEffect(() => {
+    const intervalId = window.setInterval(() => {},0);
+    for (let i = 1; i <= intervalId; i++) {
+      window.clearInterval(i);
+    }
     if (tweets?.data?.length > 0) {
       let ind = 0
       const intv = setInterval(() => {
-        if (ind === tweets.length - 1) {
-        clearInterval(intv)}
         ind++
         console.log(ind)
         scroller.scrollTo(ind.toString(), {
@@ -162,6 +164,8 @@ function App() {
         smooth: true,
       })
       }, 5500)
+      if (ind === tweets.length - 1) {
+        clearInterval(intv)}
     return () => clearInterval(intv)
     }
   }, [tweets ])
