@@ -204,7 +204,7 @@ function App() {
         .catch((e) => {
           setIsLoading(false)
         })
-      })
+      }, formValues.interval*60000)
       setSearchParams({ filters })
       return () => clearInterval(apiInt)
     } else if (query.length === 0 && initialQuery !== null) {
