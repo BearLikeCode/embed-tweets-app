@@ -146,8 +146,6 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-          console.log('Tweets',tweets)
-          console.log(!!(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => tweets?.data?.map(tweet => tweet.id).includes(value))))
           if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
             setTweets(res.data)
             }
@@ -197,7 +195,7 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-          if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
+          if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => tweets?.data?.includes(value)))) {
             setTweets(res.data)
             }
         })
