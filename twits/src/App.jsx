@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Scroll from 'react-scroll';
 import { Link, Button, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import Tweet from './components/Tweet';
@@ -180,34 +180,33 @@ function App() {
   }, [tweets ])
 
   useEffect(() => {
-    // const socket = io.connect('/')
-    // socket.on('connect', () => {
-    //   console.log('socket connected..')
-    //   socket.on('tweets', data => {
-    //     setTweets((prev) => [data].concat(prev.slice(0, 20)))
-    //   })
-    // })
-    // socket.on('disconnect', () => {
-    //   socket.off('tweets')
-    //   socket.removeAllListeners('tweets')
-    //   console.log('socket disconnected')
-    // })
     if (query.length !== 0) {
+      const intervalId = window.setInterval(() => {},0);
+
+      for (let i = 1; i <= intervalId; i++) {
+        window.clearInterval(i);
+      }
+
       const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
       const amount = formValues.amount
       setIsLoading(true)
+      const apiInt = setInterval(() => {
       axios
         .get('/api/recent-api', {
           params: { filters, amount }
         })
         .then((res) => {
           setIsLoading(false)
-          setTweets(res.data)
+          if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
+            setTweets(res.data)
+            }
         })
         .catch((e) => {
           setIsLoading(false)
         })
+      })
       setSearchParams({ filters })
+      return () => clearInterval(apiInt)
     } else if (query.length === 0 && initialQuery !== null) {
       setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#'))
     }
