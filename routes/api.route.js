@@ -71,7 +71,6 @@ router.get('/recent-api', async (req, res, next) => {
     })
   }
     const user = await loggedApp.currentUser()
-    // console.log(recent.data)
     // res.send(recent.data)
     const tweetsList = recent !== undefined ? { data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta } : initial
     const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
