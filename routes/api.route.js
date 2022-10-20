@@ -62,9 +62,9 @@ router.get('/recent-api', async (req, res, next) => {
     })
     .then((payload) => {
       
-      initial.data.concat(payload?.data?.data)
-      initial.includes.media.concat(payload?.data?.includes?.media)
-      initial.includes.users.concat(payload?.data?.includes?.users)
+      initial.data.push(...payload?.data?.data)
+      initial.includes.media.push(...payload?.data?.includes?.media)
+      initial.includes.users.push(...payload?.data?.includes?.users)
       initial.meta = payload?.data?.meta
       console.log(initial)
     })
