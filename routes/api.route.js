@@ -48,7 +48,7 @@ router.get('/recent-api', async (req, res, next) => {
     const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:').map(tag => tag.replace('(', '').replace(')', '')))
     const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
     await tags.forEach(tag => {
-       loggedApp.v2.search(req.query.filters, {
+       loggedApp.v2.search(`${tag} ${authors}`, {
         max_results: (req.query.amount / tags.length),
         start_time: new Date(startTime).toISOString(),
         sort_order: 'relevancy',
@@ -78,6 +78,7 @@ router.get('/recent-api', async (req, res, next) => {
       )
       res.send(newData?.tweetsList)
   } catch (err) {
+    console.log(err)
     next(err)
   }
 })
