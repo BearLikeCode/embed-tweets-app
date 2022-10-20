@@ -210,6 +210,14 @@ function App() {
       setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#'))
     }
   }, [query, setSearchParams, initialQuery])
+
+  const clearIntervals = () => {
+    const intervalId = window.setInterval(() => {},0);
+
+      for (let i = 1; i <= intervalId; i++) {
+        window.clearInterval(i);
+      }
+  }
   return (
     <>
       <div className='flex'>
@@ -226,6 +234,7 @@ function App() {
             <input
               className='hashtagInput'
               type='text'
+              onFocus={clearIntervals}
               placeholder='Search filters'
               value={searchString}
               onChange={handleChange}

@@ -21,7 +21,17 @@ const client = new TwitterApi({ appKey: API_KEY, appSecret: API_SECRET });
 router.get('/recent-api', async (req, res, next) => {
   const startTime = new Date() - ((60000 * 60) *48)
   try {
-    const recent = await loggedApp.v2.search(req.query.filters, {
+    let initial = {
+      data: [],
+      includes: {
+        media: [],
+        users: []
+      },
+      meta: {}
+    }
+    let recent
+    if (req.query.filters[0] !== '(') {
+      recent = await loggedApp.v2.search(req.query.filters, {
         max_results: req.query.amount,
         start_time: new Date(startTime).toISOString(),
         sort_order: 'relevancy',
@@ -33,10 +43,35 @@ router.get('/recent-api', async (req, res, next) => {
     'media.fields':
       'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics'
     })
+  } else {
+    const tags = req.query.filters.split(' ').filter(tag => tag.includes('#').map(tag => tag.replace('(', '').replace(')', '')))
+    const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:').map(tag => tag.replace('(', '').replace(')', '')))
+    const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
+    await tags.forEach(tag => {
+       loggedApp.v2.search(req.query.filters, {
+        max_results: (req.query.amount / tags.length),
+        start_time: new Date(startTime).toISOString(),
+        sort_order: 'relevancy',
+        expansions:
+        'author_id,attachments.media_keys',
+    'tweet.fields':
+      'attachments,author_id,public_metrics,created_at,id,in_reply_to_user_id,text',
+    'user.fields': 'id,name,profile_image_url,protected,url,username,verified',
+    'media.fields':
+      'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics'
+    })
+    .then((payload) => {
+      initial.data.concat(payload?.data?.data)
+      initial.includes.media.concat(payload?.data?.includes?.media)
+      initial.includes.users.concat(payload?.data?.includes?.users)
+      initial.meta = payload?.data?.meta
+    })
+    })
+  }
     const user = await loggedApp.currentUser()
     // console.log(recent.data)
     // res.send(recent.data)
-    const tweetsList = { data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta }
+    const tweetsList = recent !== undefined ? { data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta } : initial
     const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
       {tweetsList}, 
       {upsert: true, new: true, setDefaultsOnInsert: true}
