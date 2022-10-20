@@ -44,8 +44,8 @@ router.get('/recent-api', async (req, res, next) => {
       'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics'
     })
   } else {
-    const tags = req.query.filters.split(' ').filter(tag => tag.includes('#').map(tag => tag.replace('(', '').replace(')', '')))
-    const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:').map(tag => tag.replace('(', '').replace(')', '')))
+    const tags = req.query.filters.split(' ').filter(tag => tag.includes('#')).map(tag => tag.replace('(', '').replace(')', ''))
+    const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:')).map(tag => tag.replace('(', '').replace(')', ''))
     const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
     await tags.forEach(tag => {
        loggedApp.v2.search(`${tag} ${authors}`, {
