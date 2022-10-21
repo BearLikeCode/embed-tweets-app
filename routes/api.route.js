@@ -52,13 +52,13 @@ router.get('/recent-api', async (req, res, next) => {
       )
     res.send(newData?.tweetsList)
     } else {
-    const tags = req.query.filters.split(' ').filter(tag => tag.includes('#')).map(tag => tag.replace('(', '').replace(')', ''))
-    const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:')).map(tag => tag.replace('(', '').replace(')', ''))
-    const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
     async function* recentItems() {
+      const tags = req.query.filters.split(' ').filter(tag => tag.includes('#')).map(tag => tag.replace('(', '').replace(')', ''))
+      const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:')).map(tag => tag.replace('(', '').replace(')', ''))
+      const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
       for (let i = 0; i < tags.length; i++) {
         const recentItem = await loggedApp.v2.search(`${tags[i]} ${from}`, {
-          max_results: (req.query.amount / tags.length),
+          max_results: Math.round(req.query.amount / tags.length),
           start_time: new Date(startTime).toISOString(),
           sort_order: 'relevancy',
           expansions:
@@ -78,9 +78,9 @@ router.get('/recent-api', async (req, res, next) => {
 
       let generator = recentItems();
       for await (let value of generator) {
-        initial.data = initial.data.concat(value?.data?.data)
-        initial.includes.media = initial.includes.media.concat(value?.data?.includes?.media)
-        initial.includes.users = initial.includes.users.concat(value?.data?.includes?.users)
+        initial.data = initial.data.concat(value?.data?.data !== null ? value?.data?.data : [])
+        initial.includes.media = initial.includes.media.concat(initial.includes !== null ? value?.data?.includes?.media : [])
+        initial.includes.users = initial.includes.users.concat(initial.includes !== null ? value?.data?.includes?.users : [])
         initial.meta = value?.data?.meta
         tweetsList = initial
         console.log(tweetsList)
