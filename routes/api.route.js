@@ -85,12 +85,13 @@ router.get('/recent-api', async (req, res, next) => {
         tweetsList = initial
         console.log(tweetsList)
       }
-    })()
-    const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
+      const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
       {tweetsList}, 
       {upsert: true, new: true, setDefaultsOnInsert: true}
       )
-    res.send(newData?.tweetsList)
+      res.send(newData?.tweetsList)
+    })()
+    
     } 
     // tags.forEach(async tag => {
     //    const recentItem = await loggedApp.v2.search(`${tag} ${from}`, {
