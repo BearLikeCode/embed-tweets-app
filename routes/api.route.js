@@ -20,16 +20,18 @@ const client = new TwitterApi({ appKey: API_KEY, appSecret: API_SECRET });
 
 router.get('/recent-api', async (req, res, next) => {
   const startTime = new Date() - ((60000 * 60) *48)
+  let initial = {
+    data: [],
+    includes: {
+      media: [],
+      users: []
+    },
+    meta: {}
+  }
   try {
-    let initial = {
-      data: [],
-      includes: {
-        media: [],
-        users: []
-      },
-      meta: {}
-    }
+    const user = await loggedApp.currentUser()
     let recent
+    let tweetsList
     if (req.query.filters[0] !== '(') {
       recent = await loggedApp.v2.search(req.query.filters, {
         max_results: req.query.amount,
@@ -43,13 +45,19 @@ router.get('/recent-api', async (req, res, next) => {
     'media.fields':
       'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics'
     })
+    tweetsList = { data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta }
+    const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
+      {tweetsList}, 
+      {upsert: true, new: true, setDefaultsOnInsert: true}
+      )
+    res.send(newData?.tweetsList)
     } else {
     const tags = req.query.filters.split(' ').filter(tag => tag.includes('#')).map(tag => tag.replace('(', '').replace(')', ''))
     const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:')).map(tag => tag.replace('(', '').replace(')', ''))
     const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
-    async function* recentItems(client) {
+    async function* recentItems() {
       for (let i = 0; i <= tags.length; i++) {
-        const recentItem = await client.v2.search(`${tags[i]} ${from}`, {
+        const recentItem = await loggedApp.v2.search(`${tags[i]} ${from}`, {
           max_results: (req.query.amount / tags.length),
           start_time: new Date(startTime).toISOString(),
           sort_order: 'relevancy',
@@ -66,16 +74,22 @@ router.get('/recent-api', async (req, res, next) => {
     
     }
 
-    (async (loggedApp) => {
+    (async () => {
 
-      let generator = recentItems(loggedApp);
+      let generator = recentItems();
       for await (let value of generator) {
         initial.data = initial.data.concat(value?.data?.data)
         initial.includes.media = initial.includes.media.concat(value?.data?.includes?.media)
         initial.includes.users = initial.includes.users.concat(value?.data?.includes?.users)
         initial.meta = payload?.data?.meta
+        tweetsList = initial
       }
     })()
+    const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
+      {tweetsList}, 
+      {upsert: true, new: true, setDefaultsOnInsert: true}
+      )
+    res.send(newData?.tweetsList)
     } 
     // tags.forEach(async tag => {
     //    const recentItem = await loggedApp.v2.search(`${tag} ${from}`, {
@@ -99,14 +113,8 @@ router.get('/recent-api', async (req, res, next) => {
     // })
     // })
   // }
-    const user = await loggedApp.currentUser()
     // res.send(recent.data)
-    const tweetsList = recent !== undefined ? { data: recent?.data?.data, includes: recent?.data?.includes, meta: recent?.data?.meta } : initial
-    const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
-      {tweetsList}, 
-      {upsert: true, new: true, setDefaultsOnInsert: true}
-      )
-    res.send(newData?.tweetsList)
+    
   } catch (err) {
     console.log(err)
     next(err)
