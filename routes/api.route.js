@@ -78,9 +78,9 @@ router.get('/recent-api', async (req, res, next) => {
 
       let generator = recentItems();
       for await (let value of generator) {
-        initial.data = initial.data.concat(value?.data?.data !== null ? value?.data?.data : [])
-        initial.includes.media = initial.includes.media.concat(initial.includes !== null ? value?.data?.includes?.media : [])
-        initial.includes.users = initial.includes.users.concat(initial.includes !== null ? value?.data?.includes?.users : [])
+        initial.data = value?.data?.data === null ? initial.data : initial.data.concat(value?.data?.data)
+        initial.includes.media = value?.data?.includes === null ? initial.includes.media : initial.includes.media.concat(value?.data?.includes?.media)
+        initial.includes.users = value?.data?.includes === null ? initial.includes.users : initial.includes.users.concat(value?.data?.includes?.users)
         initial.meta = value?.data?.meta
         tweetsList = initial
         console.log(tweetsList)
