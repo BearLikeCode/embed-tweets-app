@@ -279,14 +279,14 @@ function App() {
                 return (
                 <Element name={ind}>
                 <Tweet
-                  public_metrics={tweet.public_metrics}
+                  public_metrics={tweet?.public_metrics}
                   // referenced_tweets={tweet.referenced_tweets}
                   id={tweet.id}
                   author={tweets?.includes?.users?.find(user => user.id === tweet.author_id)}
                   media={tweet?.attachments?.media_keys?.map(mkey => tweets.includes.media.find(media => mkey === media.media_key))}
-                  created_at={tweet.created_at}
-                  text={tweet.text}
-                  key={tweet.id}
+                  created_at={tweet?.created_at}
+                  text={tweet?.text}
+                  key={tweet?.id}
                 />
                 </Element>
                 )}
