@@ -83,6 +83,7 @@ router.get('/recent-api', async (req, res, next) => {
         initial.includes.users = initial.includes.users.concat(value?.data?.includes?.users)
         initial.meta = value?.data?.meta
         tweetsList = initial
+        console.log(tweetsList)
       }
     })()
     const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
