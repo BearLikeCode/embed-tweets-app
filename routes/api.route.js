@@ -61,7 +61,6 @@ router.get('/recent-api', async (req, res, next) => {
       'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics'
     })
     .then((payload) => {
-      
       initial.data.push(...payload?.data?.data)
       initial.includes.media.push(...payload?.data?.includes?.media)
       initial.includes.users.push(...payload?.data?.includes?.users)
