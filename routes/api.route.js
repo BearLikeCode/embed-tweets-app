@@ -66,9 +66,9 @@ router.get('/recent-api', async (req, res, next) => {
     
     }
 
-    (async (loggedClient) => {
+    (async (loggedApp) => {
 
-      let generator = recentItems(loggedClient);
+      let generator = recentItems(loggedApp);
       for await (let value of generator) {
         initial.data = initial.data.concat(value?.data?.data)
         initial.includes.media = initial.includes.media.concat(value?.data?.includes?.media)
