@@ -66,7 +66,7 @@ router.get('/recent-api', async (req, res, next) => {
     
     }
 
-    (async () => {
+    (async (loggedClient) => {
 
       let generator = recentItems(loggedClient);
       for await (let value of generator) {
