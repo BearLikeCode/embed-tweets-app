@@ -49,6 +49,7 @@ function App() {
   const [query, setQuery] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isLogged, setIsLogged] = useState(!!cookies.tokens)
+  const [firstRender, setFirstRender] = useState(true)
 
   const handleAmountChange = ({ target: {value} }) => {
     setFormValues({ ...formValues, amount: value })
@@ -207,9 +208,9 @@ function App() {
       }, formValues.interval*60000)
       return () => clearInterval(apiInt)
     } else if (query.length === 0 && initialQuery !== null) {
-      setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#'))
+      setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#' && query !== 'OR').map(item => item.replace('(','').replace(')','')))
     }
-  }, [query, setSearchParams, initialQuery])
+  }, [query, setSearchParams, initialQuery, formValues?.amount, formValues?.interval])
 
   const clearIntervals = () => {
     const intervalId = window.setInterval(() => {},0);
