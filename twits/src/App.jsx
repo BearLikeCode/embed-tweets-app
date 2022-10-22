@@ -271,7 +271,7 @@ function App() {
           <div className='fixedWidth'>
             <div className='tagLabels'>
               {query !== [] &&
-                query.map(item => <TagLabel key={item} setSearchParams={setSearchParams} setQuery={setQuery} tag={item} />)
+                query.map(item => <TagLabel key={item} setSearchParams={setSearchParams} setQuery={setQuery} query={query} tag={item} />)
               }
             </div>
             {isLoading ?
