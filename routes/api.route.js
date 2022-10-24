@@ -146,8 +146,6 @@ router.get('/callback', (req, res, next) => {
     return res.status(400).send('You denied the app or your session expired!');
   }
 
-  // Obtain the persistent tokens
-  // Create a client from temporary tokens
   const client = new TwitterApi({
     appKey: API_KEY,
     appSecret: API_SECRET,
@@ -178,7 +176,7 @@ router.get('/recent', async (req, res, next) => {
   try {
     const user = await loggedApp.currentUser()
 
-    Tweet.findOne({id_str: user.id_str}) 
+    Tweet.findOne({id_str: req.query.user || user.id_str}) 
     .then(result => res.send(result.tweetsList || {}))
   } catch (err) {
     next(err)

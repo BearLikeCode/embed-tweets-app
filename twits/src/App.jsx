@@ -44,6 +44,7 @@ function App() {
   const initialQuery = searchParams.get('filters')
   const oauth_token = searchParams.get('oauth_token')
   const oauth_verifier = searchParams.get('oauth_verifier')
+  const user = searchParams.get('user')
   const [tweets, setTweets] = useState({})
   const [searchString, setSearchString] = useState('')
   const [query, setQuery] = useState([])
@@ -97,7 +98,7 @@ function App() {
           }
         })
         .then((res) => {
-          setCookie('user', { name: res.data.user.name, photo: res.data.user.profile_image_url_https })
+          setCookie('user', { name: res.data.user.name, photo: res.data.user.profile_image_url_https, id_str: res.data.user.id_str })
           setCookie('tokens', { accessToken: res.data.accessToken, accessSecret: res.data.accessSecret })
           setIsLogged(true)
         })
@@ -119,7 +120,7 @@ function App() {
     if (isLogged) {
     searchParams.delete('oauth_token')
     searchParams.delete('oauth_verifier')
-    setSearchParams(searchParams)
+    setSearchParams({...searchParams, user: cookies?.user?.id_str})
     setIsLoading(true)
     axios
         .get('/api/recent', {
@@ -132,6 +133,27 @@ function App() {
           setIsLoading(false)
         })}
   }, [isLogged])
+
+  useEffect(() => {
+    if (!isLogged && user !== null) {
+      const intID = setInterval(() => {
+        console.log('fetch in interval')
+        axios
+        .get(`/api/recent?user=${user}`, {
+        })
+        .then((res) => {
+          setIsLoading(false)
+          if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
+            setTweets(res.data)
+            }
+        })
+        .catch((e) => {
+          setIsLoading(false)
+        })
+      }, formValues.interval*60000)
+      return () => clearInterval(intID)
+    }
+  })
 
   useEffect(() => {
     if (isLogged && tweets?.data?.length > 0 && query.length === 0) {
@@ -172,9 +194,13 @@ function App() {
         smooth: true,
       })
       }, 5500)
+      window.addEventListener('scroll', clearInterval(intv))
       if (ind === tweets.length - 1) {
         clearInterval(intv)}
-    return () => clearInterval(intv)
+    return () => {
+      clearInterval(intv)
+      window.removeEventListener('scroll', clearInterval(intv))
+    }
     }
   }, [tweets ])
 
@@ -225,7 +251,7 @@ function App() {
         {cookies.user &&
           <UserInfo setIsLogged={setIsLogged} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} />
         }
-        {!isLogged ?
+        {!isLogged && user === null ?
         <Auth /> :
         <>
           <form
@@ -235,6 +261,7 @@ function App() {
             <input
               className='hashtagInput'
               type='text'
+              disabled={!isLogged}
               onFocus={clearIntervals}
               placeholder='Search filters'
               value={searchString}
@@ -291,7 +318,6 @@ function App() {
                 />
                 </Element>
                 )}
-
               )
             }
           </div>
