@@ -117,12 +117,15 @@ function App() {
   }
 
   useEffect(() => {
-    if (isLogged) {
-    searchParams.delete('oauth_token')
-    searchParams.delete('oauth_verifier')
-    setSearchParams({...searchParams, user: cookies?.user?.id_str})
-    setIsLoading(true)
-    axios
+    if (firstRender) {
+      setFirstRender(false)
+    } else {
+        if (isLogged) {
+      searchParams.delete('oauth_token')
+      searchParams.delete('oauth_verifier')
+      setSearchParams({...searchParams, user: cookies?.user?.id_str})
+      setIsLoading(true)
+      axios
         .get('/api/recent', {
         })
         .then((res) => {
@@ -132,6 +135,7 @@ function App() {
         .catch((e) => {
           setIsLoading(false)
         })}
+    }
   }, [isLogged])
 
   useEffect(() => {
