@@ -120,7 +120,7 @@ function App() {
         if (isLogged) {
       searchParams.delete('oauth_token')
       searchParams.delete('oauth_verifier')
-      setSearchParams({...searchParams, user: cookies?.user?.id_str})
+      setSearchParams(searchParams)
       setIsLoading(true)
       axios
         .get('/api/recent', {
