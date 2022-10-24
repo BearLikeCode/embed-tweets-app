@@ -230,7 +230,7 @@ function App() {
         .catch((e) => {
           setIsLoading(false)
         })
-        setSearchParams({ filters,  })
+        setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str })
       }, formValues.interval*60000)
       return () => clearInterval(apiInt)
     } else if (query.length === 0 && initialQuery !== null) {
