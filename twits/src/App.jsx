@@ -117,13 +117,15 @@ function App() {
   }
 
   useEffect(() => {
-    if (firstRender) {
-      setFirstRender(false)
-    } else {
+    if (initialQuery !== null) {
+      setSearchParams({...searchParams, user: cookies?.user?.id_str})
+    }
+  }, [initialQuery])
+
+  useEffect(() => {
         if (isLogged) {
       searchParams.delete('oauth_token')
       searchParams.delete('oauth_verifier')
-      setSearchParams({...searchParams, user: cookies?.user?.id_str})
       setIsLoading(true)
       axios
         .get('/api/recent', {
@@ -135,7 +137,6 @@ function App() {
         .catch((e) => {
           setIsLoading(false)
         })}
-    }
   }, [isLogged])
 
   useEffect(() => {
@@ -160,7 +161,7 @@ function App() {
   })
 
   useEffect(() => {
-    if (isLogged && tweets?.data?.length > 0 && query.length === 0) {
+    if (isLogged && query.length === 0) {
       const intervalId = window.setInterval(() => {},0);
 
       for (let i = 1; i <= intervalId; i++) {
