@@ -60,10 +60,10 @@ function App() {
   }
 
   useEffect(() => {
-    if (formValues.amount) {
+    if (formValues.amount && isLogged) {
       setSearchParams({...searchParams, amount: formValues.amount})
     }
-  }, [formValues?.amount])
+  }, [formValues?.amount, isLogged])
 
   useEffect(() => {
     query.length === 0 && setTweets({})
