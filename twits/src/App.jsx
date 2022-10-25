@@ -50,7 +50,6 @@ function App() {
   const [query, setQuery] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isLogged, setIsLogged] = useState(!!cookies.tokens)
-  const [firstRender, setFirstRender] = useState(true)
 
   const handleAmountChange = ({ target: {value} }) => {
     setFormValues({ ...formValues, amount: value })
@@ -223,6 +222,7 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
+          setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str })
           if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => tweets?.data?.includes(value)))) {
             setTweets(res.data)
             }
@@ -230,10 +230,9 @@ function App() {
         .catch((e) => {
           setIsLoading(false)
         })
-        setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str })
       }, formValues.interval*60000)
       return () => clearInterval(apiInt)
-    } else if (query.length === 0 && initialQuery !== null) {
+    } else if (query.length === 0 && initialQuery !== null && isLogged) {
       setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#' && query !== 'OR').map(item => item.replace('(','').replace(')','')))
     }
   }, [query, setSearchParams, initialQuery, formValues?.amount, formValues?.interval])
