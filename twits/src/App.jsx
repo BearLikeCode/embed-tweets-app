@@ -152,7 +152,7 @@ function App() {
       }, formValues.interval*60000)
       return () => clearInterval(intID)
     }
-  })
+  }, [isLogged, user])
 
   useEffect(() => {
     if (isLogged && tweets?.data?.length > 0 && query.length === 0) {
@@ -244,11 +244,17 @@ function App() {
         window.clearInterval(i);
       }
   }
+  const authClickHandler = async() => {
+    await axios
+        .get(`/api/token-request`)
+        .then((res) => window.location.href = res.data.url)
+}
   return (
     <>
       <div className='flex'>
-        {cookies.user &&
-          <UserInfo setIsLogged={setIsLogged} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} />
+        {cookies.user && isLogged ?
+          <UserInfo setIsLogged={setIsLogged} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} /> :
+          <span onClick={authClickHandler}>authorize</span>
         }
         {!isLogged && user === null ?
         <Auth /> :
@@ -274,6 +280,7 @@ function App() {
             </button>
           </form>
 
+          { isLogged &&
           <div className='selectControls'>
             <label htmlFor="interval">Refresh interval, min</label>
             <select value={formValues.interval} onChange={handleIntervalChange}>
@@ -293,6 +300,7 @@ function App() {
               ))}
             </select>
           </div>
+          }
 
           <div className='fixedWidth'>
             <div className='tagLabels'>
