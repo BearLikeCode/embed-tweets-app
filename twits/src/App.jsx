@@ -254,7 +254,7 @@ function App() {
     <>
       <div className='flex'>
         {cookies.user && isLogged ?
-          <UserInfo setIsLogged={setIsLogged} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} /> :
+          <UserInfo setIsLogged={setIsLogged} setSearchParams={setSearchParams} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} /> :
           <span onClick={authClickHandler}>authorize</span>
         }
         {!isLogged && user === null ?

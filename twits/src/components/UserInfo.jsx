@@ -8,6 +8,7 @@ const UserInfo = (props) => {
     await axios
       .get(`/api/logout`)
       .then((res) => {
+        props.setSearchParams(prev => ({...prev, user: null}))
         props.removeCookie('user')
         props.removeCookie('tokens')
         props.setIsLogged(false)
