@@ -182,7 +182,7 @@ function App() {
   }, [isLogged, tweets])
 
   useEffect(() => {
-    if (tweets?.data?.length > 0) {
+    if (tweets?.data?.length > 0 && query.length === 0) {
       let ind = 0
       const intv = setInterval(() => {
         ind++
@@ -193,15 +193,15 @@ function App() {
         smooth: true,
       })
       }, 5500)
-      window.addEventListener('scroll', clearInterval(intv))
+      // window.addEventListener('scroll', clearInterval(intv))
       if (ind === tweets.length - 1) {
         clearInterval(intv)}
     return () => {
       clearInterval(intv)
-      window.removeEventListener('scroll', clearInterval(intv))
+      // window.removeEventListener('scroll', clearInterval(intv))
     }
     }
-  }, [tweets ])
+  }, [tweets, query])
 
   useEffect(() => {
     if (query.length !== 0) {
