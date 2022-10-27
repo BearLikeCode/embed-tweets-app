@@ -50,6 +50,7 @@ function App() {
   const [query, setQuery] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isLogged, setIsLogged] = useState(!!cookies.tokens)
+  const [firstRender, setFirstRender] = useState(true)
 
   const handleAmountChange = ({ target: {value} }) => {
     setFormValues({ ...formValues, amount: value })
@@ -204,6 +205,9 @@ function App() {
   }, [tweets, query])
 
   useEffect(() => {
+    if (firstRender) {
+      setFirstRender(false)
+    } else {
     if (query.length !== 0) {
       console.log('useeffect')
       const intervalId = window.setInterval(() => {},0);
@@ -237,6 +241,7 @@ function App() {
     } else if (query.length === 0 && initialQuery !== null && isLogged) {
       setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#' && query !== 'OR').map(item => item.replace('(','').replace(')','')))
     }
+  }
   }, [query, setSearchParams, initialQuery, formValues?.amount, formValues?.interval])
 
   const clearIntervals = () => {
