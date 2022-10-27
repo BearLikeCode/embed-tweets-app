@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
@@ -41,7 +41,7 @@ function App() {
     amount: optionsAmount[4].value,
     interval: optionsInterval[0].value
   })
-  const initialQuery = searchParams.get('filters')
+  const initialQuery = useMemo(() => searchParams.get('filters'), [])
   const oauth_token = searchParams.get('oauth_token')
   const oauth_verifier = searchParams.get('oauth_verifier')
   const user = searchParams.get('user')
@@ -217,7 +217,7 @@ function App() {
       }
 
       setIsLoading(true)
-      const apiInt = setInterval(() => {
+      const apiInt = setInterval(function apiIntCallback() {
         const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
         const amount = formValues.amount
   
@@ -236,13 +236,14 @@ function App() {
         .catch((e) => {
           setIsLoading(false)
         })
-      }, formValues.interval*60000)
+        return apiIntCallback;
+      }(), formValues.interval*60000)
       return () => clearInterval(apiInt)
     } else if (query.length === 0 && initialQuery !== null && isLogged) {
       setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#' && query !== 'OR').map(item => item.replace('(','').replace(')','')))
     }
   }
-  }, [query, setSearchParams, initialQuery, formValues?.amount, formValues?.interval])
+  }, [query, initialQuery, formValues?.amount, formValues?.interval])
 
   const clearIntervals = () => {
     const intervalId = window.setInterval(() => {},0);
