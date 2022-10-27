@@ -205,6 +205,7 @@ function App() {
 
   useEffect(() => {
     if (query.length !== 0) {
+      console.log('useeffect')
       const intervalId = window.setInterval(() => {},0);
 
       for (let i = 1; i <= intervalId; i++) {
@@ -253,7 +254,7 @@ function App() {
   return (
     <>
       <div className='flex'>
-        {cookies.user && isLogged ?
+        {cookies.user && isLogged && user !== null ?
           <UserInfo setIsLogged={setIsLogged} setSearchParams={setSearchParams} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} /> :
           <span onClick={authClickHandler}>authorize</span>
         }
