@@ -316,7 +316,7 @@ function App() {
                 query.map(item => <TagLabel key={item} setSearchParams={setSearchParams} setQuery={setQuery} query={query} tag={item} />)
               }
             </div> 
-            {tweets?.data === null &&
+            {tweets?.data === null && !isLoading &&
               <h2>Any tweets founded... Try to change the filters</h2>
             }
             {isLoading ?
