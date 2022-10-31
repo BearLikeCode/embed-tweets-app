@@ -13,7 +13,7 @@ router.use(bodyParser())
 
 const API_KEY = "dvOwXwgmts10o7U4tm4Npp3jc"
 const API_SECRET = "UPLjyxj3kzUUduIboQCgQXLuYmHq74DTYMarnXcxm6RnRql7va"
-let loggedApp
+// let loggedApp
 // const client = new TwitterApi('AAAAAAAAAAAAAAAAAAAAAIOffAEAAAAAwgZmrDXsZocUQUGZqD%2F7%2BLfQGdI%3DxG8c9zec4y9Oi0Zid5qxLG417HRVRZj3vgtNhwwmbActLFQX11')
 const client = new TwitterApi({ appKey: API_KEY, appSecret: API_SECRET });
 var store = new MongoDBStore({
@@ -39,11 +39,11 @@ router.get('/recent-api', async (req, res, next) => {
     meta: {}
   }
   try {
-    const user = await loggedApp.currentUser()
+    const user = await req.session.loggedApp.currentUser()
     let recent
     let tweetsList
     if (req.query.filters[0] !== '(') {
-      recent = await loggedApp.v2.search(req.query.filters, {
+      recent = await req.session.loggedApp.v2.search(req.query.filters, {
         max_results: req.query.amount,
         start_time: new Date(startTime).toISOString(),
         sort_order: 'relevancy',
@@ -67,7 +67,7 @@ router.get('/recent-api', async (req, res, next) => {
       const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:')).map(tag => tag.replace('(', '').replace(')', ''))
       const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
       for (let i = 0; i < tags.length; i++) {
-        const recentItem = await loggedApp.v2.search(`${tags[i]} ${from}`, {
+        const recentItem = await req.session.loggedApp.v2.search(`${tags[i]} ${from}`, {
           max_results: Math.round(req.query.amount / tags.length),
           start_time: new Date(startTime).toISOString(),
           sort_order: 'relevancy',
@@ -165,7 +165,7 @@ router.get('/callback', (req, res, next) => {
 
   client.login(oauth_verifier)
     .then(({ client: loggedClient, accessToken, accessSecret }) => {
-      loggedApp = loggedClient
+      req.session.loggedApp = loggedClient
       loggedClient.currentUser()
       .then((response) => {
         Tweet.findOneAndUpdate({name: response.screen_name, id_str: response.id_str}, 
@@ -184,7 +184,7 @@ router.get('/callback', (req, res, next) => {
 
 router.get('/recent', async (req, res, next) => {
   try {
-    const user = await loggedApp.currentUser()
+    const user = await req.session.loggedApp.currentUser()
 
     Tweet.findOne({id_str: req.query.user || user.id_str}) 
     .then(result => res.send(result.tweetsList || {}))

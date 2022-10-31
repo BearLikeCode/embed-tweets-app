@@ -10,6 +10,14 @@ const tweetSchema = new Schema({
         type: String,
         required:true
     },
+    accessToken: {
+        type: String,
+        required:false
+    },
+    accessSecret: {
+        type: String,
+        required:false
+    },
     tweetsList: {
         type: Object,
         required: false
