@@ -26,7 +26,7 @@ store.on('error', function(error) {
   console.log(error);
 });
 
-router.use(session({secret: 'ssshhhhh', saveUninitialized: true, store: store, resave: true, cookie: { maxAge: (60000 * 60 * 24) }}));
+router.use(session({secret: 'ssshhhhh', saveUninitialized: true, store: store, resave: false, cookie: { maxAge: (60000 * 60 * 24) }}));
 
 router.get('/recent-api', async (req, res, next) => {
   const startTime = new Date() - ((60000 * 60) *48)
@@ -136,8 +136,8 @@ router.get('/recent-api', async (req, res, next) => {
 router.get('/token-request', async (req, res, next) => {
   try{
     const authLink = await client.generateAuthLink('https://embed-tweets.herokuapp.com/', { linkMode: 'authorize' });
-    req.session = {oauth_token_secret: authLink.oauth_token_secret}
-    // sess.oauth_token_secret = authLink.oauth_token_secret
+    const sess = req.session
+    sess.oauth_token_secret = authLink.oauth_token_secret
     res.send(authLink)
 
   } catch (err) {
