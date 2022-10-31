@@ -1,5 +1,6 @@
 const { query } = require('express')
 const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
 
 const Tweet = require('../server/models/Tweet')
 const fetch = require('node-fetch')
@@ -9,14 +10,23 @@ const bodyParser = require('body-parser')
 const TwitterApi = require('twitter-api-v2').default
 const router = require('express').Router()
 router.use(bodyParser())
-router.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true,cookie: { maxAge: (60000 * 60 * 24) }}));
 
 const API_KEY = "dvOwXwgmts10o7U4tm4Npp3jc"
 const API_SECRET = "UPLjyxj3kzUUduIboQCgQXLuYmHq74DTYMarnXcxm6RnRql7va"
 let loggedApp
-let sess
 // const client = new TwitterApi('AAAAAAAAAAAAAAAAAAAAAIOffAEAAAAAwgZmrDXsZocUQUGZqD%2F7%2BLfQGdI%3DxG8c9zec4y9Oi0Zid5qxLG417HRVRZj3vgtNhwwmbActLFQX11')
 const client = new TwitterApi({ appKey: API_KEY, appSecret: API_SECRET });
+var store = new MongoDBStore({
+  uri: 'mongodb+srv://dbEugen:eilinskih92@cluster0.uw7bjw4.mongodb.net/tweets?retryWrites=true&w=majority',
+  collection: 'mySessions'
+});
+
+// Catch errors
+store.on('error', function(error) {
+  console.log(error);
+});
+
+router.use(session({secret: 'ssshhhhh', saveUninitialized: true, store: store, resave: true, cookie: { maxAge: (60000 * 60 * 24) }}));
 
 router.get('/recent-api', async (req, res, next) => {
   const startTime = new Date() - ((60000 * 60) *48)
@@ -126,8 +136,8 @@ router.get('/recent-api', async (req, res, next) => {
 router.get('/token-request', async (req, res, next) => {
   try{
     const authLink = await client.generateAuthLink('https://embed-tweets.herokuapp.com/', { linkMode: 'authorize' });
-    sess = req.session
-    sess.oauth_token_secret = authLink.oauth_token_secret
+    req.session = {oauth_token_secret: authLink.oauth_token_secret}
+    // sess.oauth_token_secret = authLink.oauth_token_secret
     res.send(authLink)
 
   } catch (err) {
