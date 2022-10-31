@@ -38,12 +38,18 @@ router.get('/recent-api', async (req, res, next) => {
     },
     meta: {}
   }
+  const loggedApp = new TwitterApi({
+    appKey: API_KEY,
+    appSecret: API_SECRET,
+    accessToken: req.session.accessToken,
+    accessSecret: req.session.accessSecret
+  });
   try {
-    const user = await req.session.loggedApp.currentUser()
+    const user = await loggedApp.currentUser()
     let recent
     let tweetsList
     if (req.query.filters[0] !== '(') {
-      recent = await req.session.loggedApp.v2.search(req.query.filters, {
+      recent = await loggedApp.v2.search(req.query.filters, {
         max_results: req.query.amount,
         start_time: new Date(startTime).toISOString(),
         sort_order: 'relevancy',
@@ -67,7 +73,7 @@ router.get('/recent-api', async (req, res, next) => {
       const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:')).map(tag => tag.replace('(', '').replace(')', ''))
       const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
       for (let i = 0; i < tags.length; i++) {
-        const recentItem = await req.session.loggedApp.v2.search(`${tags[i]} ${from}`, {
+        const recentItem = await loggedApp.v2.search(`${tags[i]} ${from}`, {
           max_results: Math.round(req.query.amount / tags.length),
           start_time: new Date(startTime).toISOString(),
           sort_order: 'relevancy',
@@ -165,7 +171,9 @@ router.get('/callback', (req, res, next) => {
 
   client.login(oauth_verifier)
     .then(({ client: loggedClient, accessToken, accessSecret }) => {
-      req.session.loggedApp = loggedClient
+      req.session.accessToken = accessToken
+      req.session.accessSecret = accessSecret
+
       loggedClient.currentUser()
       .then((response) => {
         Tweet.findOneAndUpdate({name: response.screen_name, id_str: response.id_str}, 
@@ -184,7 +192,13 @@ router.get('/callback', (req, res, next) => {
 
 router.get('/recent', async (req, res, next) => {
   try {
-    const user = await req.session.loggedApp.currentUser()
+    const loggedApp = new TwitterApi({
+      appKey: API_KEY,
+      appSecret: API_SECRET,
+      accessToken: req.session.accessToken,
+      accessSecret: req.session.accessSecret
+    });
+    const user = await loggedApp.currentUser()
 
     Tweet.findOne({id_str: req.query.user || user.id_str}) 
     .then(result => res.send(result.tweetsList || {}))
@@ -195,7 +209,7 @@ router.get('/recent', async (req, res, next) => {
 
 router.get('/logout', async (req, res, next) => {
   try {
-    loggedApp = undefined
+    // loggedApp = undefined
     res.send('cleared')
   } catch (err) {
     next(err)
@@ -210,7 +224,7 @@ router.post('/me', async (req, res, next) => {
       accessToken: req.body.accessToken,
       accessSecret: req.body.accessSecret
     });
-    loggedApp = client
+    // loggedApp = client
     res.send('logged')
   } catch (err) {
     next(err)
