@@ -315,7 +315,10 @@ function App() {
               {query !== [] &&
                 query.map(item => <TagLabel key={item} setSearchParams={setSearchParams} setQuery={setQuery} query={query} tag={item} />)
               }
-            </div>
+            </div> 
+            {tweets?.data === null &&
+              <h2>Any tweets founded... Try to change the filters</h2>
+            }
             {isLoading ?
               <div className='loader'><img src={Loader} alt='loading' /></div> :
               tweets?.data && tweets?.data.map((tweet, ind) => {
