@@ -59,11 +59,11 @@ function App() {
     setFormValues({ ...formValues, interval: value })
   }
 
-  useEffect(() => {
-    if (formValues.amount && isLogged) {
-      setSearchParams({...searchParams, amount: formValues.amount})
-    }
-  }, [formValues?.amount, isLogged])
+  // useEffect(() => {
+  //   if (formValues.amount && isLogged) {
+  //     setSearchParams({...searchParams, amount: formValues.amount})
+  //   }
+  // }, [formValues?.amount, isLogged])
 
   useEffect(() => {
     query.length === 0 && setTweets({})
@@ -226,7 +226,7 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-          setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str })
+          setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
           if (tweets.data === undefined || res.data === null || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => tweets?.data?.includes(value)))) {
             setTweets(res.data)
             }
