@@ -93,13 +93,26 @@ router.get('/recent-api', async (req, res, next) => {
     (async () => {
 
       let generator = recentItems();
-      for await (let value of generator) {
+      const dataArrs = []
+      for await (let {value, done} of generator) {
+        value?.data?.data !== undefined && dataArrs.push(value?.data?.data)
+
         initial.data = (value?.data?.data === undefined ? initial.data : initial.data.concat(value?.data?.data))
         initial.includes.media = (value?.data?.includes === undefined ? initial.includes.media : initial.includes.media.concat(value?.data?.includes?.media))
         initial.includes.users = (value?.data?.includes === undefined ? initial.includes.users : initial.includes.users.concat(value?.data?.includes?.users))
         initial.meta = value?.data?.meta
-        tweetsList = initial
-        console.log(tweetsList)
+        if (done) {
+          const arrsCount = dataArrs.length
+          const newDataArr = new Array(dataArrs.flat().length)
+          for (let i = 0; i < dataArrs[0].length; i++) {
+            for (let j = 0; j < dataArrs.length; j++) {
+              newDataArr[arrsCount*i+j]
+            }
+          }
+          initial.data = newDataArr
+          tweetsList = initial
+        }
+        console.log(initial.data)
       }
       const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
       {tweetsList}, 
@@ -107,31 +120,7 @@ router.get('/recent-api', async (req, res, next) => {
       )
       res.send(newData?.tweetsList)
     })()
-    
     } 
-    // tags.forEach(async tag => {
-    //    const recentItem = await loggedApp.v2.search(`${tag} ${from}`, {
-    //     max_results: (req.query.amount / tags.length),
-    //     start_time: new Date(startTime).toISOString(),
-    //     sort_order: 'relevancy',
-    //     expansions:
-    //     'author_id,attachments.media_keys',
-    // 'tweet.fields':
-    //   'attachments,author_id,public_metrics,created_at,id,in_reply_to_user_id,text',
-    // 'user.fields': 'id,name,profile_image_url,protected,url,username,verified',
-    // 'media.fields':
-    //   'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics'
-    // })
-    // .then((payload) => {
-    //   initial.data.push(...payload?.data?.data)
-    //   initial.includes.media.push(...payload?.data?.includes?.media)
-    //   initial.includes.users.push(...payload?.data?.includes?.users)
-    //   initial.meta = payload?.data?.meta
-    //   console.log(initial)
-    // })
-    // })
-  // }
-    // res.send(recent.data)
     
   } catch (err) {
     console.log(err)
