@@ -95,7 +95,6 @@ router.get('/recent-api', async (req, res, next) => {
 
       let generator = recentItems();
       const dataArrs = []
-      console.log(generator.length)
 
       for await (let value of generator) {
         if (value?.data?.data !== undefined) {
@@ -105,7 +104,6 @@ router.get('/recent-api', async (req, res, next) => {
         initial.includes.media = (value?.data?.includes === undefined ? initial.includes.media : initial.includes.media.concat(value?.data?.includes?.media))
         initial.includes.users = (value?.data?.includes === undefined ? initial.includes.users : initial.includes.users.concat(value?.data?.includes?.users))
         initial.meta = value?.data?.meta
-        if (done) {
           const arrsCount = dataArrs.length
           const newDataArr = new Array(dataArrs.flat().length)
           for (let i = 0; i < Math.round(req.query.amount / tags.length); i++) {
@@ -115,7 +113,6 @@ router.get('/recent-api', async (req, res, next) => {
           }
           initial.data = newDataArr
           tweetsList = initial
-        }
         console.log(initial.data)
       }
       const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
