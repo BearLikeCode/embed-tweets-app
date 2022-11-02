@@ -110,6 +110,7 @@ router.get('/recent-api', async (req, res, next) => {
           const newDataArr = new Array(dataArrs.flat().length)
           for (let i = 0; i < Math.round(req.query.amount / tags.length); i++) {
             for (let j = 0; j < dataArrs.length; j++) {
+              if (dataArrs[j][i] !== undefined)
               newDataArr[arrsCount*i+j] = dataArrs[j][i]
             }
           }
