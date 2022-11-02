@@ -10,17 +10,19 @@
 }
 .controlsContainer {
   display: flex;
-  height: 150px;
   flex-direction: column;
+  height: 150px;
+  width: 100%;
+  max-width: 530px;
   gap: 20px;
 }
 
 .hashtagGroup {
   width: 100%;
-  max-width: 530px;
-  height: 60px;
-  padding: 10px;
-  position: relative;
+    max-width: 510px;
+    height: 60px;
+    padding: 10px;
+    position: relative;
 }
 .hashtagGroup button {
   padding: 0;
