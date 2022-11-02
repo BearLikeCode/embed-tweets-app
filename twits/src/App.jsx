@@ -24,8 +24,8 @@ function App() {
     { value: 30, text: '30' },
     { value: 50, text: '50' },
     { value: 70, text: '70' },
-    { value: 100, text: '100'},
-   ];
+    { value: 100, text: '100' },
+  ];
   const optionsInterval = [
     { value: 1, text: '1' },
     { value: 3, text: '3' },
@@ -50,10 +50,10 @@ function App() {
   const [isLogged, setIsLogged] = useState(!!cookies.tokens)
   const [firstRender, setFirstRender] = useState(true)
 
-  const handleAmountChange = ({ target: {value} }) => {
+  const handleAmountChange = ({ target: { value } }) => {
     setFormValues({ ...formValues, amount: value })
   }
-  const handleIntervalChange = ({ target: {value} }) => {
+  const handleIntervalChange = ({ target: { value } }) => {
     setFormValues({ ...formValues, interval: value })
   }
 
@@ -114,7 +114,7 @@ function App() {
   }
 
   useEffect(() => {
-        if (isLogged) {
+    if (isLogged) {
       searchParams.delete('oauth_token')
       searchParams.delete('oauth_verifier')
       setSearchParams(searchParams)
@@ -124,55 +124,56 @@ function App() {
         })
         .then((res) => {
           setIsLoading(false)
-            setTweets(res.data)
+          setTweets(res.data)
         })
         .catch((e) => {
           setIsLoading(false)
-        })}
+        })
+    }
   }, [isLogged])
 
   useEffect(() => {
     if (!isLogged && user !== null) {
       const intID = setInterval(() => {
         axios
-        .get(`/api/recent?user=${user}`, {
-        })
-        .then((res) => {
-          setIsLoading(false)
-          if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
-            setTweets(res.data)
+          .get(`/api/recent?user=${user}`, {
+          })
+          .then((res) => {
+            setIsLoading(false)
+            if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
+              setTweets(res.data)
             }
-        })
-        .catch((e) => {
-          setIsLoading(false)
-        })
-      }, formValues.interval*60000)
+          })
+          .catch((e) => {
+            setIsLoading(false)
+          })
+      }, formValues.interval * 60000)
       return () => clearInterval(intID)
     }
   }, [isLogged, user])
 
   useEffect(() => {
     if (isLogged && tweets?.data?.length > 0 && query.length === 0) {
-      const intervalId = window.setInterval(() => {},0);
+      const intervalId = window.setInterval(() => { }, 0);
 
       for (let i = 1; i <= intervalId; i++) {
         window.clearInterval(i);
       }
-        const intID = setInterval(() => {
+      const intID = setInterval(() => {
         axios
-        .get('/api/recent', {
-        })
-        .then((res) => {
-          setIsLoading(false)
-          if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
-            setTweets(res.data)
+          .get('/api/recent', {
+          })
+          .then((res) => {
+            setIsLoading(false)
+            if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
+              setTweets(res.data)
             }
-        })
-        .catch((e) => {
-          setIsLoading(false)
-        })
-      }, formValues.interval*60000)
-          return () => clearInterval(intID)
+          })
+          .catch((e) => {
+            setIsLoading(false)
+          })
+      }, formValues.interval * 60000)
+      return () => clearInterval(intID)
     }
 
   }, [isLogged, tweets])
@@ -183,18 +184,19 @@ function App() {
       const intv = setInterval(() => {
         ind++
         scroller.scrollTo(ind.toString(), {
-        duration: 3500,
-        delay: 0 ,
-        smooth: true,
-      })
+          duration: 3500,
+          delay: 0,
+          smooth: true,
+        })
       }, 5500)
       // window.addEventListener('scroll', clearInterval(intv))
       if (ind === tweets.length - 1) {
-        clearInterval(intv)}
-    return () => {
-      clearInterval(intv)
-      // window.removeEventListener('scroll', clearInterval(intv))
-    }
+        clearInterval(intv)
+      }
+      return () => {
+        clearInterval(intv)
+        // window.removeEventListener('scroll', clearInterval(intv))
+      }
     }
   }, [tweets, query])
 
@@ -202,142 +204,147 @@ function App() {
     if (firstRender) {
       setFirstRender(false)
     } else {
-    if (query.length !== 0) {
-      const intervalId = window.setInterval(() => {},0);
+      if (query.length !== 0) {
+        const intervalId = window.setInterval(() => { }, 0);
 
-      for (let i = 1; i <= intervalId; i++) {
-        window.clearInterval(i);
+        for (let i = 1; i <= intervalId; i++) {
+          window.clearInterval(i);
+        }
+
+        setIsLoading(true)
+        const apiInt = setInterval(function apiIntCallback() {
+          const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
+          const amount = formValues.amount
+
+          axios
+            .get('/api/recent-api', {
+              params: { filters, amount }
+            })
+            .then((res) => {
+              setIsLoading(false)
+              setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
+              if (tweets.data === undefined || res.data === null || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => tweets?.data?.includes(value)))) {
+                setTweets(res.data)
+              }
+            })
+            .catch((e) => {
+              setIsLoading(false)
+            })
+          return apiIntCallback;
+        }(), formValues.interval * 60000)
+        return () => clearInterval(apiInt)
+      } else if (query.length === 0 && initialQuery !== null && isLogged) {
+        setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#' && query !== 'OR').map(item => item.replace('(', '').replace(')', '')))
       }
-
-      setIsLoading(true)
-      const apiInt = setInterval(function apiIntCallback() {
-        const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
-        const amount = formValues.amount
-  
-      axios
-        .get('/api/recent-api', {
-          params: { filters, amount }
-        })
-        .then((res) => {
-          setIsLoading(false)
-          setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
-          if (tweets.data === undefined || res.data === null || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => tweets?.data?.includes(value)))) {
-            setTweets(res.data)
-            }
-        })
-        .catch((e) => {
-          setIsLoading(false)
-        })
-        return apiIntCallback;
-      }(), formValues.interval*60000)
-      return () => clearInterval(apiInt)
-    } else if (query.length === 0 && initialQuery !== null && isLogged) {
-      setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#' && query !== 'OR').map(item => item.replace('(','').replace(')','')))
     }
-  }
   }, [query, initialQuery, formValues?.amount, formValues?.interval])
 
   const clearIntervals = () => {
-    const intervalId = window.setInterval(() => {},0);
+    const intervalId = window.setInterval(() => { }, 0);
 
-      for (let i = 1; i <= intervalId; i++) {
-        window.clearInterval(i);
-      }
+    for (let i = 1; i <= intervalId; i++) {
+      window.clearInterval(i);
+    }
   }
-  const authClickHandler = async() => {
+  const authClickHandler = async () => {
     await axios
-        .get(`/api/token-request`)
-        .then((res) => window.location.href = res.data.url)
-}
+      .get(`/api/token-request`)
+      .then((res) => window.location.href = res.data.url)
+  }
   return (
     <>
       <div className='flex'>
-        
+
         {!isLogged && user === null ?
-        <Auth /> :
-        <>
-        <div className='controlsContainer'>
-        {cookies.user && isLogged ?
-          <UserInfo setIsLogged={setIsLogged} setSearchParams={setSearchParams} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} /> :
-          user !== null ?
-          <span onClick={authClickHandler}>authorize</span> :
-          null
-        }
-          <form
-            className='hashtagGroup'
-            onSubmit={submitSearch}
-          >
-            <input
-              className='hashtagInput'
-              type='text'
-              disabled={!isLogged}
-              onFocus={clearIntervals}
-              placeholder='Search filters'
-              value={searchString}
-              onChange={handleChange}
-            />
-            <button disabled={searchString === ''}>
+          <Auth /> :
+          <>
+            <div className='headerBlock'>
+              {cookies.user && isLogged ?
+                <UserInfo setIsLogged={setIsLogged} setSearchParams={setSearchParams} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} /> :
+                user !== null ?
+                  <span onClick={authClickHandler}>authorize</span> :
+                  null
+              }
+
+              <div className='controlsContainer'>
+
+                <form
+                  className='hashtagGroup'
+                  onSubmit={submitSearch}
+                >
+                  <input
+                    className='hashtagInput'
+                    type='text'
+                    disabled={!isLogged}
+                    onFocus={clearIntervals}
+                    placeholder='Search filters'
+                    value={searchString}
+                    onChange={handleChange}
+                  />
+                  <button disabled={searchString === ''}>
+                    {isLoading ?
+                      <ButtonLoader /> :
+                      <img width={20} height={20} alt='search' src={search} />
+                    }
+                  </button>
+                </form>
+
+                {isLogged &&
+                  <div className='selectControls'>
+                    <label htmlFor="interval">Refresh interval, min</label>
+                    <select value={formValues.interval} onChange={handleIntervalChange}>
+                      {optionsInterval.map(option => (
+                        <option key={option.value} value={option.value}>
+                          {option.text}
+                        </option>
+                      ))}
+                    </select>
+
+                    <label htmlFor="count">Tweets amount</label>
+                    <select value={formValues.amount} onChange={handleAmountChange}>
+                      {optionsAmount.map(option => (
+                        <option key={option.value} value={option.value}>
+                          {option.text}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div className='fixedWidth'>
+              <div className='tagLabels'>
+                {query !== [] &&
+                  query.map(item => <TagLabel key={item} setSearchParams={setSearchParams} setQuery={setQuery} query={query} tag={item} />)
+                }
+              </div>
+              {tweets?.data === null && !isLoading &&
+                <h2>Any tweets founded... Try to change the filters</h2>
+              }
               {isLoading ?
-                <ButtonLoader /> :
-                <img width={20} height={20} alt='search' src={search} />
+                <div className='loader'><img src={Loader} alt='loading' /></div> :
+                tweets?.data && tweets?.data.map((tweet, ind) => {
+                  return (
+                    <Element name={ind}>
+                      <Tweet
+                        public_metrics={tweet?.public_metrics}
+                        // referenced_tweets={tweet.referenced_tweets}
+                        id={tweet?.id}
+                        author={tweets?.includes?.users?.find(user => user.id === tweet.author_id)}
+                        media={tweet?.attachments?.media_keys?.map(mkey => tweets.includes.media.find(media => mkey === media.media_key))}
+                        created_at={tweet?.created_at}
+                        text={tweet?.text}
+                        key={tweet?.id}
+                      />
+                    </Element>
+                  )
+                }
+                )
               }
-            </button>
-          </form>
-
-          { isLogged &&
-          <div className='selectControls'>
-            <label htmlFor="interval">Refresh interval, min</label>
-            <select value={formValues.interval} onChange={handleIntervalChange}>
-              {optionsInterval.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.text}
-                </option>
-              ))}
-            </select>
-
-            <label htmlFor="count">Tweets amount</label>
-            <select value={formValues.amount} onChange={handleAmountChange}>
-              {optionsAmount.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.text}
-                </option>
-              ))}
-            </select>
-          </div>
-          }
-          </div>
-
-          <div className='fixedWidth'>
-            <div className='tagLabels'>
-              {query !== [] &&
-                query.map(item => <TagLabel key={item} setSearchParams={setSearchParams} setQuery={setQuery} query={query} tag={item} />)
-              }
-            </div> 
-            {tweets?.data === null && !isLoading &&
-              <h2>Any tweets founded... Try to change the filters</h2>
-            }
-            {isLoading ?
-              <div className='loader'><img src={Loader} alt='loading' /></div> :
-              tweets?.data && tweets?.data.map((tweet, ind) => {
-                return (
-                <Element name={ind}>
-                <Tweet
-                  public_metrics={tweet?.public_metrics}
-                  // referenced_tweets={tweet.referenced_tweets}
-                  id={tweet?.id}
-                  author={tweets?.includes?.users?.find(user => user.id === tweet.author_id)}
-                  media={tweet?.attachments?.media_keys?.map(mkey => tweets.includes.media.find(media => mkey === media.media_key))}
-                  created_at={tweet?.created_at}
-                  text={tweet?.text}
-                  key={tweet?.id}
-                />
-                </Element>
-                )}
-              )
-            }
-          </div>
-        </>
-       }
+            </div>
+          </>
+        }
       </div>
     </>
   );
