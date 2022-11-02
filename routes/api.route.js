@@ -99,8 +99,8 @@ router.get('/recent-api', async (req, res, next) => {
         if (value?.data?.data !== undefined) {
           dataArrs.push(value?.data?.data)
         }
-        console.log(value?.data?.data)
-        initial.data = (value?.data?.data === undefined ? initial.data : initial.data.concat(value?.data?.data))
+        console.log(value)
+        // initial.data = (value?.data?.data === undefined ? initial.data : initial.data.concat(value?.data?.data))
         initial.includes.media = (value?.data?.includes === undefined ? initial.includes.media : initial.includes.media.concat(value?.data?.includes?.media))
         initial.includes.users = (value?.data?.includes === undefined ? initial.includes.users : initial.includes.users.concat(value?.data?.includes?.users))
         initial.meta = value?.data?.meta
