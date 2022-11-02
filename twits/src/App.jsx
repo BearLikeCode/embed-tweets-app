@@ -33,7 +33,6 @@ function App() {
   ];
 
   const tweetRefs = useRef([])
-  console.log('ref',tweetRefs.current)
   const [searchParams, setSearchParams] = useSearchParams();
   const [cookies, setCookie, removeCookie] = useCookies();
   const [formValues, setFormValues] = useState({
@@ -82,7 +81,6 @@ function App() {
     }
   }, [])
 
-  console.log('cookies', cookies)
   useEffect(() => {
     if (initialQuery === ' ' || initialQuery === '#') setSearchParams({})
   }, [initialQuery])
@@ -136,7 +134,6 @@ function App() {
   useEffect(() => {
     if (!isLogged && user !== null) {
       const intID = setInterval(() => {
-        console.log('fetch in interval')
         axios
         .get(`/api/recent?user=${user}`, {
         })
@@ -162,7 +159,6 @@ function App() {
         window.clearInterval(i);
       }
         const intID = setInterval(() => {
-        console.log('fetch in interval')
         axios
         .get('/api/recent', {
         })
@@ -186,7 +182,6 @@ function App() {
       let ind = 0
       const intv = setInterval(() => {
         ind++
-        console.log(ind)
         scroller.scrollTo(ind.toString(), {
         duration: 3500,
         delay: 0 ,
@@ -266,6 +261,7 @@ function App() {
         {!isLogged && user === null ?
         <Auth /> :
         <>
+        <div className='controlsContainer'>
           <form
             className='hashtagGroup'
             onSubmit={submitSearch}
@@ -308,6 +304,7 @@ function App() {
             </select>
           </div>
           }
+          </div>
 
           <div className='fixedWidth'>
             <div className='tagLabels'>

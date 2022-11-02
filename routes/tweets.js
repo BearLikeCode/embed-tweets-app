@@ -35,7 +35,6 @@ module.exports = async (app, socketConnection) => {
     streamFilter.on(ETwitterStreamEvent.ReconnectAttempt, (att) => console.log('reconnecting:', att))
 
 
-    console.log(socketConnection.id)
 
     const sendMessage = (msg) => {
         socketConnection.emit('tweets', msg)

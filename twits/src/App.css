@@ -8,6 +8,12 @@
   height: 100vh;
   transition: all 0.8s;
 }
+.controlsContainer {
+  display: flex;
+  height: 150px;
+  flex-direction: column;
+  gap: 20px;
+}
 
 .hashtagGroup {
   width: 100%;

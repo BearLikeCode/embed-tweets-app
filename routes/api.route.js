@@ -75,7 +75,7 @@ router.get('/recent-api', async (req, res, next) => {
       const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
       for (let i = 0; i < tags.length; i++) {
         const recentItem = await  loggedApp.v2.search(`${tags[i]} ${from}`, {
-          max_results: Math.round(req.query.amount / tags.length),
+          max_results: Math.round(req.query.amount / tags.length) < 10 ? 10 : Math.round(req.query.amount / tags.length),
           start_time: new Date(startTime).toISOString(),
           sort_order: 'relevancy',
           expansions:
@@ -115,7 +115,6 @@ router.get('/recent-api', async (req, res, next) => {
           }
           initial.data = newDataArr
           tweetsList = initial
-        console.log(initial.data)
       const newData = await Tweet.findOneAndUpdate({name: user.screen_name, id_str: user.id_str}, 
       {tweetsList}, 
       {upsert: true, new: true, setDefaultsOnInsert: true}
