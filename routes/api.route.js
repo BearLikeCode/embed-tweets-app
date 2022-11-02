@@ -26,7 +26,7 @@ store.on('error', function(error) {
   console.log(error);
 });
 
-router.use(session({secret: 'ssshhhhh', saveUninitialized: true, store: store, resave: false, cookie: { maxAge: (60000 * 60 * 24) }}));
+router.use(session({secret: 'ssshhhhh', saveUninitialized: true, store: store, resave: false, cookie: { maxAge: (60000 * 60 * 24 * 10) }}));
 
 router.get('/recent-api', async (req, res, next) => {
   const startTime = new Date() - ((60000 * 60) *48)
