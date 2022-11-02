@@ -185,7 +185,7 @@ function App() {
         ind++
         scroller.scrollTo(ind.toString(), {
           duration: 3500,
-          offset: -50,
+          offset: -150,
           delay: 0,
           smooth: true,
         })
