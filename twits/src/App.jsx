@@ -25,8 +25,7 @@ function App() {
     { value: 50, text: '50' },
     { value: 70, text: '70' },
     { value: 100, text: '100'},
-
-  ];
+   ];
   const optionsInterval = [
     { value: 1, text: '1' },
     { value: 3, text: '3' },
