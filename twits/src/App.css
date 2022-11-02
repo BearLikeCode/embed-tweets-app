@@ -12,6 +12,7 @@
 .headerBlock {
   position: fixed;
   top: 0;
+  z-index: 99;
   width: 100%;
   display: flex;
   background: rgb(226, 229, 232);
@@ -69,6 +70,7 @@
   transition: all 0.5s;
   max-width: 530px;
   height: 70%;
+  transform: translateY(50px);
   /* background: #FFF; */
   border-radius: 8px;
   padding: 10px;
