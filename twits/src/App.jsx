@@ -323,6 +323,7 @@ function App() {
               {tweets?.data === null && !isLoading &&
                 <h2>Any tweets founded... Try to change the filters</h2>
               }
+              
               {isLoading ?
                 <div className='loader'><img src={Loader} alt='loading' /></div> :
                 tweets?.data && tweets?.data.map((tweet, ind) => {
