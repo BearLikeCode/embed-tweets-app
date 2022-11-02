@@ -179,7 +179,7 @@ function App() {
   }, [isLogged, tweets])
 
   useEffect(() => {
-    if (tweets?.data?.length > 0 && query.length === 0) {
+    if (tweets?.data?.length > 0) {
       let ind = 0
       const intv = setInterval(() => {
         ind++
@@ -199,7 +199,7 @@ function App() {
         // window.removeEventListener('scroll', clearInterval(intv))
       }
     }
-  }, [tweets, query])
+  }, [tweets])
 
   useEffect(() => {
     if (firstRender) {
