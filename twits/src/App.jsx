@@ -277,7 +277,6 @@ function App() {
                     className='hashtagInput'
                     type='text'
                     disabled={!isLogged}
-                    onFocus={clearIntervals}
                     placeholder='Search filters'
                     value={searchString}
                     onChange={handleChange}
