@@ -310,15 +310,16 @@ function App() {
                     </select>
                   </div>
                 }
-              </div>
-            </div>
-
-            <div className='fixedWidth'>
-              <div className='tagLabels'>
+                <div className='tagLabels'>
                 {query !== [] &&
                   query.map(item => <TagLabel key={item} setSearchParams={setSearchParams} setQuery={setQuery} query={query} tag={item} />)
                 }
               </div>
+              </div>
+            </div>
+
+            <div className='fixedWidth'>
+              
               {tweets?.data === null && !isLoading &&
                 <h2>Any tweets founded... Try to change the filters</h2>
               }
