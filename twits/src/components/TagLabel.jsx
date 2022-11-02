@@ -6,7 +6,7 @@ const TagLabel = (props) => {
         e.stopPropagation()
         props.setSearchParams(prev => (prev.get('filters')
         .split(' ')
-        .filter(item => !item.includes(props.tag)).length > 0 && props.query.length > 0 ?
+        .filter(item => !item.includes(props.tag)).length > 0 ?
         {filters: `${props.query
           .filter(tag => !tag.includes(props.tag))
           .filter(item => !item.includes('@')).length > 1 ? 
