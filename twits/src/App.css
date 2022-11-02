@@ -15,6 +15,7 @@
   width: 100%;
   max-width: 530px;
   gap: 20px;
+  position: relative;
 }
 
 .hashtagGroup {
@@ -118,9 +119,9 @@
   width: 100%;
   padding-right: 50px;
   justify-content: flex-end;
-  /* position: absolute;
+  position: absolute;
   top: 20px;
-  right: 20px; */
+  right: 20px;
 }
 .userContainer img {
   border-radius: 50%;

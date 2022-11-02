@@ -252,16 +252,17 @@ function App() {
   return (
     <>
       <div className='flex'>
+        
+        {!isLogged && user === null ?
+        <Auth /> :
+        <>
+        <div className='controlsContainer'>
         {cookies.user && isLogged ?
           <UserInfo setIsLogged={setIsLogged} setSearchParams={setSearchParams} removeCookie={removeCookie} photo={cookies?.user?.photo} name={cookies?.user?.name} /> :
           user !== null ?
           <span onClick={authClickHandler}>authorize</span> :
           null
         }
-        {!isLogged && user === null ?
-        <Auth /> :
-        <>
-        <div className='controlsContainer'>
           <form
             className='hashtagGroup'
             onSubmit={submitSearch}
