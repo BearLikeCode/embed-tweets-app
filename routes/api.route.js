@@ -68,8 +68,9 @@ router.get('/recent-api', async (req, res, next) => {
       )
     res.send(newData?.tweetsList)
     } else {
-    async function* recentItems() {
       const tags = req.query.filters.split(' ').filter(tag => tag.includes('#')).map(tag => tag.replace('(', '').replace(')', ''))
+
+    async function* recentItems() {
       const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:')).map(tag => tag.replace('(', '').replace(')', ''))
       const from = authors.length > 1 ? `(${authors.join(' OR ')})` : authors
       for (let i = 0; i < tags.length; i++) {
@@ -96,7 +97,7 @@ router.get('/recent-api', async (req, res, next) => {
       const dataArrs = []
       for await (let {value, done} of generator) {
         value?.data?.data !== undefined && dataArrs.push(value?.data?.data)
-
+        console.log(dataArrs)
         initial.data = (value?.data?.data === undefined ? initial.data : initial.data.concat(value?.data?.data))
         initial.includes.media = (value?.data?.includes === undefined ? initial.includes.media : initial.includes.media.concat(value?.data?.includes?.media))
         initial.includes.users = (value?.data?.includes === undefined ? initial.includes.users : initial.includes.users.concat(value?.data?.includes?.users))
@@ -104,7 +105,7 @@ router.get('/recent-api', async (req, res, next) => {
         if (done) {
           const arrsCount = dataArrs.length
           const newDataArr = new Array(dataArrs.flat().length)
-          for (let i = 0; i < dataArrs[0].length; i++) {
+          for (let i = 0; i < Math.round(req.query.amount / tags.length); i++) {
             for (let j = 0; j < dataArrs.length; j++) {
               newDataArr[arrsCount*i+j]
             }
