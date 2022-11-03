@@ -327,6 +327,7 @@ function App() {
               {isLoading ?
                 <div className='loader'><img src={Loader} alt='loading' /></div> :
                 tweets?.data && tweets?.data.map((tweet, ind) => {
+                  if (tweet === null) return null
                   return (
                     <Element name={ind}>
                       <Tweet
