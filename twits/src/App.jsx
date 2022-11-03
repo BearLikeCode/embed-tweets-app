@@ -39,7 +39,7 @@ function App() {
     amount: optionsAmount[4].value,
     interval: optionsInterval[0].value
   })
-  const initialQuery = useMemo(() => searchParams.get('filters'), [])
+  const initialQuery = searchParams.get('filters')
   const oauth_token = searchParams.get('oauth_token')
   const oauth_verifier = searchParams.get('oauth_verifier')
   const user = searchParams.get('user')
@@ -234,11 +234,12 @@ function App() {
           return apiIntCallback;
         }(), formValues.interval * 60000)
         return () => clearInterval(apiInt)
-      } else if (query.length === 0 && initialQuery !== null && isLogged) {
-        setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#' && query !== 'OR').map(item => item.replace('(', '').replace(')', '')))
-      }
+      } 
+      // else if (query.length === 0 && initialQuery !== null && isLogged) {
+      //   setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#' && query !== 'OR').map(item => item.replace('(', '').replace(')', '')))
+      // }
     }
-  }, [query, initialQuery, formValues?.amount, formValues?.interval])
+  }, [query, formValues?.amount, formValues?.interval])
 
   const clearIntervals = () => {
     const intervalId = window.setInterval(() => { }, 0);
