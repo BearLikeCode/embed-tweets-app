@@ -134,7 +134,7 @@ function App() {
 
   useEffect(() => {
     if (!isLogged && user !== null) {
-      const intID = setInterval(() => {
+      const intID = setInterval(function recentCallback() {
         axios
           .get(`/api/recent?user=${user}`, {
           })
@@ -147,7 +147,7 @@ function App() {
           .catch((e) => {
             setIsLoading(false)
           })
-      }, formValues.interval * 60000)
+      }(), formValues.interval * 60000)
       return () => clearInterval(intID)
     }
   }, [isLogged, user])
