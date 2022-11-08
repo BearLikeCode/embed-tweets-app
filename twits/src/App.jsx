@@ -213,7 +213,7 @@ function App() {
         }
 
         setIsLoading(true)
-        const apiInt = setInterval(function apiIntCallback() {
+        const apiInt = setInterval(function apiIntCallback(tweets) {
           const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
           const amount = formValues.amount
 
@@ -233,7 +233,7 @@ function App() {
               setIsLoading(false)
             })
           return apiIntCallback;
-        }(), formValues.interval * 60000)
+        }(tweets), formValues.interval * 60000)
         return () => clearInterval(apiInt)
       } 
       // else if (query.length === 0 && initialQuery !== null && isLogged) {
