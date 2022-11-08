@@ -183,15 +183,21 @@ router.get('/callback', (req, res, next) => {
 
 router.get('/recent', async (req, res, next) => {
   try {
-    const loggedApp = new TwitterApi({
+    let user
+    if (req.query.user) {
+      user = req.query.user
+    } else {
+      const loggedApp = new TwitterApi({
       appKey: API_KEY,
       appSecret: API_SECRET,
       accessToken: req.session.accessToken,
       accessSecret: req.session.accessSecret
     });
-    const user = await loggedApp.currentUser()
+    const _currentUser = await loggedApp.currentUser()
+    user = _currentUser.id_str
+    }
 
-    Tweet.findOne({id_str: req.query.user || user.id_str}) 
+    Tweet.findOne({id_str: user}) 
     .then(result => res.send(result.tweetsList || {}))
   } catch (err) {
     next(err)
