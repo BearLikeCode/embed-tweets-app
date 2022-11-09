@@ -195,7 +195,7 @@ function App() {
       return () => clearInterval(intID)
     }
 
-  }, [isLogged, query.length])
+  }, [isLogged, query.length, comparedTweets])
 
   useEffect(() => {
     if (comparedTweets?.data?.length > 0) {
@@ -211,7 +211,6 @@ function App() {
       }, 5500)
       // window.addEventListener('scroll', clearInterval(intv))
       if (ind === comparedTweets.length - 1) {
-        console.log('clearint')
         clearInterval(intv)
       }
       return () => {
