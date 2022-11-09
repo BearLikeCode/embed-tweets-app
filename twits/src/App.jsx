@@ -235,7 +235,7 @@ function App() {
         for (let i = 1; i <= intervalId; i++) {
           window.clearInterval(i);
         }
-
+        let _tweetsData = tweets?.data
         const apiInt = setInterval(() => {
           const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
           const amount = formValues.amount
@@ -245,9 +245,11 @@ function App() {
             })
             .then((res) => {
               setIsLoading(false) 
+              console.log(_tweetsData)
               setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
-              if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === tweets?.data?.map(tweet => tweet.text)[index]))) {
+              if (_tweetsData === undefined || !(res.data.data.length === _tweetsData?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === _tweetsData?.map(tweet => tweet.text)[index]))) {
                 setTweets(res.data)
+                _tweetsData = res.data.data
               }
             })
             .catch((e) => {
