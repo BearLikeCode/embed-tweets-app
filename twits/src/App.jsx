@@ -214,6 +214,7 @@ function App() {
 
         setIsLoading(true)
         const apiInt = setInterval(function apiIntCallback() {
+          console.log(this)
           let _tweetsData = tweets.data
           const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
           const amount = formValues.amount
@@ -233,7 +234,7 @@ function App() {
             .catch((e) => {
               setIsLoading(false)
             })
-          return apiIntCallback.bind(this);
+          return apiIntCallback;
         }(), formValues.interval * 60000)
         return () => clearInterval(apiInt)
       } 
