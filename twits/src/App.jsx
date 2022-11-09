@@ -246,7 +246,7 @@ function App() {
             .then((res) => {
               setIsLoading(false) 
               setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
-              if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
+              if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === tweets?.data?.map(tweet => tweet.text)[index]))) {
                 setTweets(res.data)
               }
             })
