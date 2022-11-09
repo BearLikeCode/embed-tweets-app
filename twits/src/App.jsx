@@ -213,8 +213,8 @@ function App() {
         }
 
         setIsLoading(true)
-        let _tweetsData = tweets.data
-        const apiInt = setInterval(function apiIntCallback() {
+        const apiInt = setInterval((() => {
+          let _tweetsData = tweets.data
           const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
           const amount = formValues.amount
           axios
@@ -222,7 +222,7 @@ function App() {
               params: { filters, amount }
             })
             .then((res) => {
-              setIsLoading(false)
+              setIsLoading(false) 
               setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
               console.log(res?.data?.data, tweets?.data)
               if (_tweetsData === undefined || res.data === null || !(res.data.data.length === _tweetsData?.length && res.data.data.map(tweet => tweet.text).every((value, index) => _tweetsData?.includes(value)))) {
@@ -233,8 +233,8 @@ function App() {
             .catch((e) => {
               setIsLoading(false)
             })
-          return apiIntCallback;
-        }(), formValues.interval * 60000)
+          // return apiIntCallback;
+        })(), formValues.interval * 60000)
         return () => clearInterval(apiInt)
       } 
       // else if (query.length === 0 && initialQuery !== null && isLogged) {
