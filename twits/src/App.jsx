@@ -198,7 +198,7 @@ function App() {
   }, [isLogged, tweets])
 
   useEffect(() => {
-    if (tweets?.data?.length > 0) {
+    if (comparedTweets?.data?.length > 0) {
       let ind = 0
       const intv = setInterval(() => {
         ind++
@@ -210,7 +210,7 @@ function App() {
         })
       }, 5500)
       // window.addEventListener('scroll', clearInterval(intv))
-      if (ind === tweets.length - 1) {
+      if (ind === comparedTweets.length - 1) {
         clearInterval(intv)
       }
       return () => {
@@ -218,7 +218,7 @@ function App() {
         // window.removeEventListener('scroll', clearInterval(intv))
       }
     }
-  }, [tweets])
+  }, [comparedTweets])
   const recentApiIntervalCallback = () => {
     const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
     const amount = formValues.amount
