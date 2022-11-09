@@ -174,7 +174,7 @@ function App() {
   }, [isLogged, user])
 
   useEffect(() => {
-    if (isLogged && tweets?.data?.length > 0 && query.length === 0) {
+    if (isLogged && comparedTweets?.data?.length > 0 && query.length === 0) {
       const intervalId = window.setInterval(() => { }, 0);
 
       for (let i = 1; i <= intervalId; i++) {
@@ -195,7 +195,7 @@ function App() {
       return () => clearInterval(intID)
     }
 
-  }, [isLogged, tweets])
+  }, [isLogged, query.length])
 
   useEffect(() => {
     if (comparedTweets?.data?.length > 0) {
