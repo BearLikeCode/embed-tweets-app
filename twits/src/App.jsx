@@ -244,9 +244,13 @@ function App() {
             .then((res) => {
               setIsLoading(false) 
               setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
-              if (tweets?.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === tweets?.data?.map(tweet => tweet.text)[index]))) {
-                setTweets(res.data)
-              }
+              // if (tweets?.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === tweets?.data?.map(tweet => tweet.text)[index]))) {
+                setTweets(prev => {
+                  if (prev?.data === undefined || !(res.data.data.length === prev?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === prev?.data?.map(tweet => tweet.text)[index]))) {
+                    return res.data
+                  }
+                })
+              // }
             })
             .catch((e) => {
               setIsLoading(false)
