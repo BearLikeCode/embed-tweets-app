@@ -114,6 +114,7 @@ function App() {
   }
 
   useEffect(() => {
+    if (query.length > 0) {
     setIsLoading(true)
     const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
           const amount = formValues.amount
@@ -132,6 +133,7 @@ function App() {
             .catch((e) => {
               setIsLoading(false)
             })
+          }
   }, [query.length])
 
   useEffect(() => {
@@ -244,7 +246,7 @@ function App() {
             .then((res) => {
               setIsLoading(false) 
               setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
-              if (tweets?.data === undefined || res.data === null || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => tweets?.data?.includes(value)))) {
+              if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
                 setTweets(res.data)
               }
             })
