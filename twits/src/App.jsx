@@ -222,7 +222,26 @@ function App() {
       }
     }
   }, [tweets])
-
+  const recentApiIntervalCallback = () => {
+    const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
+    const amount = formValues.amount
+    axios
+      .get('/api/recent-api', {
+        params: { filters, amount }
+      })
+      .then((res) => {
+        setIsLoading(false) 
+        console.log(tweets?.data)
+        setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
+        if (tweets?.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === tweets?.data?.map(tweet => tweet.text)[index]))) {
+          setTweets(res.data)
+        }
+      })
+      .catch((e) => {
+        setIsLoading(false)
+      })
+    // return apiIntCallback;
+  }
   useEffect(() => {
     if (firstRender) {
       setFirstRender(false)
@@ -233,30 +252,7 @@ function App() {
         for (let i = 1; i <= intervalId; i++) {
           window.clearInterval(i);
         }
-        const apiInt = setInterval(() => {
-          const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
-          const amount = formValues.amount
-          console.log(tweets?.data)
-          axios
-            .get('/api/recent-api', {
-              params: { filters, amount }
-            })
-            .then((res) => {
-              setIsLoading(false) 
-              setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
-              // if (tweets?.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === tweets?.data?.map(tweet => tweet.text)[index]))) {
-                setTweets(prev => {
-                  if (prev?.data === undefined || !(res.data.data.length === prev?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === prev?.data?.map(tweet => tweet.text)[index]))) {
-                    return res.data
-                  }
-                })
-              // }
-            })
-            .catch((e) => {
-              setIsLoading(false)
-            })
-          // return apiIntCallback;
-        }, formValues.interval * 60000)
+        const apiInt = setInterval(recentApiIntervalCallback, formValues.interval * 60000)
         return () => clearInterval(apiInt)
       } 
       // else if (query.length === 0 && initialQuery !== null && isLogged) {
