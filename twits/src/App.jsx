@@ -236,6 +236,8 @@ function App() {
           window.clearInterval(i);
         }
         let _tweetsData = tweets?.data
+        console.log(_tweetsData)
+
         const apiInt = setInterval(() => {
           const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
           const amount = formValues.amount
@@ -263,7 +265,7 @@ function App() {
       //   setQuery(initialQuery.split(' ').filter(query => query !== ' ' && query !== '#' && query !== 'OR').map(item => item.replace('(', '').replace(')', '')))
       // }
     }
-  }, [query, formValues?.amount, formValues?.interval])
+  }, [query, formValues?.amount, firstRender, formValues?.interval])
 
   const clearIntervals = () => {
     const intervalId = window.setInterval(() => { }, 0);
