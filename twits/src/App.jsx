@@ -211,6 +211,7 @@ function App() {
       }, 5500)
       // window.addEventListener('scroll', clearInterval(intv))
       if (ind === comparedTweets.length - 1) {
+        console.log('clearint')
         clearInterval(intv)
       }
       return () => {
