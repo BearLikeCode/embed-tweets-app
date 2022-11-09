@@ -188,7 +188,6 @@ function App() {
           })
           .then((res) => {
             setIsLoading(false)
-            console.log(res?.data?.data, tweets?.data)
             if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
               setTweets(res.data)
             }
@@ -236,7 +235,7 @@ function App() {
           window.clearInterval(i);
         }
         let _tweetsData = tweets?.data
-        console.log(_tweetsData)
+        console.log('useeffect',_tweetsData)
 
         const apiInt = setInterval(() => {
           const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
