@@ -60,7 +60,7 @@ function App() {
   useEffect(() => {
     console.log(tweets?.data, comparedTweets?.data)
     console.log((tweets?.data?.length === comparedTweets?.data?.length && tweets?.data?.map(tweet => tweet.text).every((value, index) => value === comparedTweets?.data?.map(tweet => tweet.text)[index])))
-    if (comparedTweets?.data === undefined || !(tweets?.data?.length === comparedTweets?.data?.length && tweets?.data.map(tweet => tweet.text).every((value, index) => value === comparedTweets?.data?.map(tweet => tweet.text)[index]))) {
+    if (comparedTweets?.data === undefined || (tweets?.data?.length !== comparedTweets?.data?.length && tweets?.data.map(tweet => tweet.text).every((value, index) => value !== comparedTweets?.data?.map(tweet => tweet.text)[index]))) {
        setComparedTweets(tweets)
     }
   }, [tweets])
