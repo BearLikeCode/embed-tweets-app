@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
@@ -32,7 +32,6 @@ function App() {
     { value: 10, text: '10' },
   ];
 
-  const tweetRefs = useRef([])
   const [searchParams, setSearchParams] = useSearchParams();
   const [cookies, setCookie, removeCookie] = useCookies();
   const [formValues, setFormValues] = useState({
@@ -44,6 +43,7 @@ function App() {
   const oauth_verifier = searchParams.get('oauth_verifier')
   const user = searchParams.get('user')
   const [tweets, setTweets] = useState({})
+  const [comparedTweets, setComparedTweets] = useState({})
   const [searchString, setSearchString] = useState('')
   const [query, setQuery] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -57,11 +57,11 @@ function App() {
     setFormValues({ ...formValues, interval: value })
   }
 
-  // useEffect(() => {
-  //   if (formValues.amount && isLogged) {
-  //     setSearchParams({...searchParams, amount: formValues.amount})
-  //   }
-  // }, [formValues?.amount, isLogged])
+  useEffect(() => {
+    if (comparedTweets?.data === undefined || !(tweets.length === comparedTweets?.data?.length && tweets.map(tweet => tweet.text).every((value, index) => value === comparedTweets?.data?.map(tweet => tweet.text)[index]))) {
+      setComparedTweets(tweets)
+    }
+  }, [tweets])
 
   useEffect(() => {
     query.length === 0 && setTweets({})
@@ -125,9 +125,7 @@ function App() {
             .then((res) => {
               setIsLoading(false) 
               setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
-              if (tweets?.data === undefined || res.data === null || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => tweets?.data?.includes(value)))) {
                 setTweets(res.data)
-              }
             })
             .catch((e) => {
               setIsLoading(false)
@@ -162,9 +160,7 @@ function App() {
           })
           .then((res) => {
             setIsLoading(false)
-            if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
               setTweets(res.data)
-            }
           })
           .catch((e) => {
             setIsLoading(false)
@@ -187,9 +183,7 @@ function App() {
           })
           .then((res) => {
             setIsLoading(false)
-            if (tweets.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.id).every((value, index) => value === tweets?.data?.map(tweet => tweet.id)[index]))) {
               setTweets(res.data)
-            }
           })
           .catch((e) => {
             setIsLoading(false)
@@ -231,11 +225,8 @@ function App() {
       })
       .then((res) => {
         setIsLoading(false) 
-        console.log(tweets?.data)
         setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
-        if (tweets?.data === undefined || !(res.data.data.length === tweets?.data?.length && res.data.data.map(tweet => tweet.text).every((value, index) => value === tweets?.data?.map(tweet => tweet.text)[index]))) {
           setTweets(res.data)
-        }
       })
       .catch((e) => {
         setIsLoading(false)
@@ -341,13 +332,13 @@ function App() {
 
             <div className='fixedWidth'>
               
-              {tweets?.data === null && !isLoading &&
+              {comparedTweets?.data === null && !isLoading &&
                 <h2>Any tweets founded... Try to change the filters</h2>
               }
               
               {isLoading ?
                 <div className='loader'><img src={Loader} alt='loading' /></div> :
-                tweets?.data && tweets?.data.map((tweet, ind) => {
+                comparedTweets?.data && comparedTweets?.data.map((tweet, ind) => {
                   if (tweet === null) return null
                   return (
                     <Element name={ind}>
@@ -355,8 +346,8 @@ function App() {
                         public_metrics={tweet?.public_metrics}
                         // referenced_tweets={tweet.referenced_tweets}
                         id={tweet?.id}
-                        author={tweets?.includes?.users?.find(user => user.id === tweet.author_id)}
-                        media={tweet?.attachments?.media_keys?.map(mkey => tweets.includes.media.find(media => mkey === media.media_key))}
+                        author={comparedTweets?.includes?.users?.find(user => user.id === tweet.author_id)}
+                        media={tweet?.attachments?.media_keys?.map(mkey => comparedTweets.includes.media.find(media => mkey === media.media_key))}
                         created_at={tweet?.created_at}
                         text={tweet?.text}
                         key={tweet?.id}
