@@ -6,10 +6,10 @@ const TagLabel = (props) => {
         e.stopPropagation()
         props.setSearchParams(prev => (prev.get('filters')
         .split(' OR ')
-        .filter(item => !item.includes(props.tag)).length > 0 ?
+        .filter(item => !item.includes(props.tag.replace('@','from:'))).length > 0 ?
         {filters: prev.get('filters')
         .split(' OR ')
-        .filter(item => !item.includes(props.tag)).join(' OR ')} :
+        .filter(item => !item.includes(props.tag.replace('@','from:'))).join(' OR ')} :
               {}
           ))
         props.setQuery(prev => prev.filter(item => !item.includes(props.tag) && item !== ' ' && item !== '#' && item !== '@'))
