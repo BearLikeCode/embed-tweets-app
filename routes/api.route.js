@@ -48,7 +48,8 @@ router.get('/recent-api', async (req, res, next) => {
     const user = await loggedApp.currentUser()
     let recent
     let tweetsList
-    if (req.query.filters[0] !== '(') {
+    const filtersLength = req.query.filters.split(' OR ').length
+    if (filtersLength < 2) {
       recent = await loggedApp.v2.search(req.query.filters, {
         max_results: req.query.amount,
         start_time: new Date(startTime).toISOString(),
