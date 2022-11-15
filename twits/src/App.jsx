@@ -119,15 +119,20 @@ function App() {
   useEffect(() => {
     if (query.length > 0) {
     setIsLoading(true)
-    const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
+    const changedQueries = query.map(q => {
+      return `${(!q.includes('#') && !q.includes('@')) ? '#' : ''}${q.replace('@', ':from')}`
+    })
+    const filtersNew = changedQueries.join(' OR ')
+
+    // const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
           const amount = formValues.amount
           axios
             .get('/api/recent-api', {
-              params: { filters, amount }
+              params: { filtersNew, amount }
             })
             .then((res) => {
               setIsLoading(false) 
-              setSearchParams({ ...searchParams, filters, user: cookies?.user?.id_str, amount })
+              setSearchParams({ ...searchParams, filtersNew, user: cookies?.user?.id_str, amount })
                 setTweets(res.data)
             })
             .catch((e) => {
