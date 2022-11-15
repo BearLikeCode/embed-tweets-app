@@ -103,12 +103,13 @@ router.get('/recent-api', async (req, res, next) => {
         if (arr.length === (req.query.amount / tags.length)) {
           return arr
         } else {
+          const arrForFill = [].concat(filledArr)
           if (arr.length <= ((req.query.amount / tags.length) - arr.length)) {
-            filledArr.concat(arr)
-            expandedFill(arr, filledArr)
+            arrForFill.concat(arr)
+            expandedFill(arr, arrForFill)
           } else {
-            filledArr.concat(arr.slice(0, ((req.query.amount / tags.length) - filledArr.length)))
-            expandedFill(arr, filledArr)
+            arrForFill.concat(arr.slice(0, ((req.query.amount / tags.length) - arrForFill.length)))
+            expandedFill(arr, arrForFill)
           }
         }
       }
