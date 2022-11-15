@@ -128,11 +128,11 @@ function App() {
           const amount = formValues.amount
           axios
             .get('/api/recent-api', {
-              params: { filtersNew, amount }
+              params: { filters: filtersNew, amount }
             })
             .then((res) => {
               setIsLoading(false) 
-              setSearchParams({ ...searchParams, filtersNew, user: cookies?.user?.id_str, amount })
+              setSearchParams({ ...searchParams, filters: filtersNew, user: cookies?.user?.id_str, amount })
                 setTweets(res.data)
             })
             .catch((e) => {
@@ -233,11 +233,11 @@ function App() {
     const amount = formValues.amount
     axios
       .get('/api/recent-api', {
-        params: { filtersNew, amount }
+        params: { filters: filtersNew, amount }
       })
       .then((res) => {
         setIsLoading(false) 
-        setSearchParams({ ...searchParams, filtersNew, user: cookies?.user?.id_str, amount })
+        setSearchParams({ ...searchParams, filters: filtersNew, user: cookies?.user?.id_str, amount })
           setTweets(res.data)
       })
       .catch((e) => {
