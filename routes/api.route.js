@@ -92,14 +92,32 @@ router.get('/recent-api', async (req, res, next) => {
     
     }
 
+    
+
     (async () => {
 
       let generator = recentItems();
       const dataArrs = []
 
+      const expandedFill = (arr, filledArr) => {
+        if (arr.length === (req.query.amount / tags.length)) {
+          return arr
+        } else {
+          if (arr.length <= ((req.query.amount / tags.length) - arr.length)) {
+            filledArr.concat(arr)
+            expandedFill(arr, filledArr)
+          } else {
+            filledArr.concat(arr(slice(0, ((req.query.amount / tags.length) - filledArr.length))))
+            expandedFill(arr, filledArr)
+          }
+        }
+      }
+
       for await (let value of generator) {
         if (value?.data?.data !== undefined) {
-          dataArrs.push(value?.data?.data)
+          const initialArr = value?.data?.data
+          const filledArr = value?.data?.data
+          dataArrs.push(expandedFill(initialArr, filledArr))
         }
         // initial.data = (value?.data?.data === undefined ? initial.data : initial.data.concat(value?.data?.data))
         initial.includes.media = (value?.data?.includes === undefined ? initial.includes.media : initial.includes.media.concat(value?.data?.includes?.media))
