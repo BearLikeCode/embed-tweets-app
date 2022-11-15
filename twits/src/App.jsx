@@ -120,7 +120,7 @@ function App() {
     if (query.length > 0) {
     setIsLoading(true)
     const changedQueries = query.map(q => {
-      return `${(!q.includes('#') && !q.includes('@')) ? '#' : ''}${q.replace('@', ':from')}`
+      return `${(!q.includes('#') && !q.includes('@')) ? '#' : ''}${q.replace('@', 'from:')}`
     })
     const filtersNew = changedQueries.join(' OR ')
 
@@ -227,7 +227,7 @@ function App() {
   const recentApiIntervalCallback = () => {
     // const filters = `${query.filter(item => !item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => !item.includes('@')).length > 0 ? query.filter(item => !item.includes('@')).map(hashtag => !hashtag.includes('#') ? `#${hashtag}` : hashtag).join(' OR ') : ''}${query.filter(item => !item.includes('@')).length > 1 ? ')' : ''}${query.filter(item => item.includes('@')).length > 0 && query.filter(item => !item.includes('@')) ? ' ' : ''}${query.filter(item => item.includes('@')).length > 1 ? '(' : ''}${query.filter(item => item.includes('@')).length > 0 ? (query.filter(item => item.includes('@')).join(' OR ').replaceAll('@', 'from:')) : ''}${query.filter(item => item.includes('@')).length > 1 ? ')' : ''}`
     const changedQueries = query.map(q => {
-      return `${(!q.includes('#') && !q.includes('@')) ? '#' : ''}${q.replace('@', ':from')}`
+      return `${(!q.includes('#') && !q.includes('@')) ? '#' : ''}${q.replace('@', 'from:')}`
     })
     const filtersNew = changedQueries.join(' OR ')
     const amount = formValues.amount

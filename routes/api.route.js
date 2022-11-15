@@ -68,7 +68,7 @@ router.get('/recent-api', async (req, res, next) => {
       )
     res.send(newData?.tweetsList)
     } else {
-      const tags = req.query.filters.split(' OR ')
+      const tags = req.query.filters.split(' ').filter(q => (q.includes('#') || q.includes('from:')))
 
     async function* recentItems() {
       // const authors = req.query.filters.split(' ').filter(tag => tag.includes('from:')).map(tag => tag.replace('(', '').replace(')', ''))
