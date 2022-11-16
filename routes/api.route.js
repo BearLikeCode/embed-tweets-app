@@ -108,6 +108,7 @@ router.get('/recent-api', async (req, res, next) => {
           const concatCount = Math.round(finalLength / arr.length)
           for (let i = 0; i < concatCount; i++) {
             filledArr.concat(arr)
+            console.log('concarr', filledArr)
           }
           return filledArr.slice(0, (finalLength - 1))
         }
