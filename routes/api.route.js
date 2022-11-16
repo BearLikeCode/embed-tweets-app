@@ -99,27 +99,25 @@ router.get('/recent-api', async (req, res, next) => {
       let generator = recentItems();
       const dataArrs = []
 
-      const expandedFill = (arr, filledArr) => {
-        if (filledArr.length === Math.round(req.query.amount / tags.length)) {
+      const expandedFill = (arr) => {
+        const filledArr = [].concat(arr)
+        const finalLength = Math.round(req.query.amount / tags.length)
+        if (filledArr.length === finalLength) {
           return filledArr
         } else {
-          const arrForFill = [].concat(filledArr)
-          if (arr.length <= ((req.query.amount / tags.length) - arr.length)) {
-            arrForFill.concat(arr)
-            expandedFill(arr, arrForFill)
-          } else {
-            arrForFill.concat(arr.slice(0, ((req.query.amount / tags.length) - arrForFill.length)))
-            expandedFill(arr, arrForFill)
+          const concatCount = Math.round(finalLength / arr.length)
+          for (let i = 0; i < concatCount; i++) {
+            filledArr.concat(arr)
           }
+          return filledArr.slice(0, (finalLength - 1))
         }
       }
 
       for await (let value of generator) {
         if (value?.data?.data !== undefined) {
-          dataArrs.push(value?.data?.data)
-          // const initialArr = value?.data?.data
-          // const filledArr = value?.data?.data
-          // dataArrs.push(expandedFill(initialArr, filledArr))
+          // dataArrs.push(value?.data?.data)
+          const initialArr = value?.data?.data
+          dataArrs.push(expandedFill(initialArr))
         }
         // initial.data = (value?.data?.data === undefined ? initial.data : initial.data.concat(value?.data?.data))
         initial.includes.media = (value?.data?.includes === undefined ? initial.includes.media : initial.includes.media.concat(value?.data?.includes?.media))
