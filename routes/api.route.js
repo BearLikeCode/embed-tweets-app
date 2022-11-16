@@ -100,12 +100,12 @@ router.get('/recent-api', async (req, res, next) => {
       const dataArrs = []
 
       const expandedFill = (arr) => {
-        const filledArr = [].concat(arr)
         const finalLength = Math.round(req.query.amount / tags.length)
-        if (filledArr.length === finalLength) {
-          return filledArr
+        if (arr.length === finalLength) {
+          return arr
         } else {
           const concatCount = Math.round(finalLength / arr.length)
+          const filledArr = [].concat(arr)
           for (let i = 0; i < concatCount; i++) {
             filledArr.concat(arr)
             console.log('concarr', filledArr)
