@@ -100,8 +100,8 @@ router.get('/recent-api', async (req, res, next) => {
       const dataArrs = []
 
       const expandedFill = (arr, filledArr) => {
-        if (arr.length === (req.query.amount / tags.length)) {
-          return arr
+        if (filledArr.length === (req.query.amount / tags.length)) {
+          return filledArr
         } else {
           const arrForFill = [].concat(filledArr)
           if (arr.length <= ((req.query.amount / tags.length) - arr.length)) {
