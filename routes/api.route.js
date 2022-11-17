@@ -116,9 +116,9 @@ router.get('/recent-api', async (req, res, next) => {
 
       for await (let value of generator) {
         if (value?.data?.data !== undefined) {
-          // dataArrs.push(value?.data?.data)
-          const initialArr = value?.data?.data
-          dataArrs.push(expandedFill(initialArr))
+          dataArrs.push(value?.data?.data)
+          // const initialArr = value?.data?.data
+          // dataArrs.push(expandedFill(initialArr))
         }
         // initial.data = (value?.data?.data === undefined ? initial.data : initial.data.concat(value?.data?.data))
         initial.includes.media = (value?.data?.includes === undefined ? initial.includes.media : initial.includes.media.concat(value?.data?.includes?.media))
